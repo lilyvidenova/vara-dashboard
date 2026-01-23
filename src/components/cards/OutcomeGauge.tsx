@@ -56,7 +56,7 @@ export function OutcomeGauge({ status, className }: OutcomeGaugeProps) {
   const centerX = width / 2
   const centerY = height - 4
   const radius = 120
-  const strokeWidth = 24
+  const strokeWidth = 14
 
   // Create arc path for a segment
   const createArc = (startAngle: number, endAngle: number): string => {
