@@ -1,9 +1,54 @@
 import { ArrowLeft, FileText, CalendarClock } from 'lucide-react'
 import { DashboardLayout } from '@/components/layout'
 import { PageHeader } from '@/components/layout/PageHeader'
-import { BaseCard } from '@/components/cards'
+import { OutcomeScoreCard, type OutcomeStatus } from '@/components/cards'
 import { useAppNavigation } from '@/hooks/useAppNavigation'
-import type { OutcomeConfig } from '@/types/outcomes'
+import type { OutcomeConfig, OutcomeId } from '@/types/outcomes'
+
+// Sample data for each outcome - would come from API in production
+const OUTCOME_DATA: Record<OutcomeId, {
+  score: number
+  status: OutcomeStatus
+  statusLabel: string
+  changeValue: string
+  changeDirection: 'up' | 'down'
+}> = {
+  'brand-awareness': {
+    score: 763,
+    status: 'strong',
+    statusLabel: 'Strong',
+    changeValue: '64%',
+    changeDirection: 'up',
+  },
+  'engagement': {
+    score: 132,
+    status: 'underperforming',
+    statusLabel: 'Underperforming',
+    changeValue: '72%',
+    changeDirection: 'down',
+  },
+  'targeting': {
+    score: 668,
+    status: 'healthy',
+    statusLabel: 'Healthy',
+    changeValue: '81%',
+    changeDirection: 'down',
+  },
+  'audience-satisfaction': {
+    score: 564,
+    status: 'at-risk',
+    statusLabel: 'At Risk',
+    changeValue: '8%',
+    changeDirection: 'down',
+  },
+  'audience-loyalty': {
+    score: 486,
+    status: 'at-risk',
+    statusLabel: 'At Risk',
+    changeValue: '21%',
+    changeDirection: 'up',
+  },
+}
 
 export interface OutcomeDetailPageProps {
   outcome: OutcomeConfig
@@ -60,21 +105,17 @@ export function OutcomeDetailPage({ outcome }: OutcomeDetailPageProps) {
         }}
       />
 
-      {/* Placeholder content - to be replaced with actual designs */}
+      {/* Outcome Score Card */}
       <div className="mt-8">
-        <BaseCard variant="bordered" padding="lg">
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Icon className="h-12 w-12 text-primary" />
-            <h2 className="mt-4 text-xl font-bold text-foreground">{outcome.name}</h2>
-            <p className="mt-1 text-sm text-muted-foreground">{outcome.subtitle}</p>
-            <p className="mt-4 text-muted-foreground">
-              Detailed analytics and insights for {outcome.name} will be displayed here.
-            </p>
-            <p className="mt-4 text-sm text-muted-foreground">
-              Content sections will be added when designs are provided.
-            </p>
-          </div>
-        </BaseCard>
+        <OutcomeScoreCard
+          title={`${outcome.name} Score`}
+          score={OUTCOME_DATA[outcome.id].score}
+          status={OUTCOME_DATA[outcome.id].status}
+          statusLabel={OUTCOME_DATA[outcome.id].statusLabel}
+          changeValue={OUTCOME_DATA[outcome.id].changeValue}
+          changeDirection={OUTCOME_DATA[outcome.id].changeDirection}
+          className="max-w-sm"
+        />
       </div>
     </DashboardLayout>
   )

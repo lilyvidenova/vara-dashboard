@@ -20,3 +20,5 @@ export {
   type MetricsCardReusableProps,
   type MetricStatData,
 } from './MetricsCardReusable'
+export { OutcomeGauge, type OutcomeGaugeProps, type OutcomeStatus } from './OutcomeGauge'
+export { OutcomeScoreCard, type OutcomeScoreCardProps } from './OutcomeScoreCard'
