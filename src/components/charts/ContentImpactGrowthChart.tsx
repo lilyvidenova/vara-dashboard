@@ -22,6 +22,7 @@ export interface ContentImpactGrowthChartProps {
   percentageChange: string
   changeDirection: 'up' | 'down'
   description?: string
+  showIcon?: boolean
   animated?: boolean
   animationDuration?: number
   animationDelay?: number
@@ -56,6 +57,7 @@ export function ContentImpactGrowthChart({
   percentageChange,
   changeDirection,
   description = 'Periodic change in your Content Impact Score',
+  showIcon = true,
   animated = true,
   animationDuration = 1500,
   animationDelay = 0,
@@ -71,7 +73,7 @@ export function ContentImpactGrowthChart({
       <div className="absolute left-6 top-6 z-10 flex flex-col gap-3">
         {/* Title row */}
         <div className="flex items-center gap-1">
-          <TrendingUp className="h-4 w-4 text-foreground" />
+          {showIcon && <TrendingUp className="h-4 w-4 text-foreground" />}
           <span className="text-base font-bold text-foreground">{title}</span>
         </div>
 
