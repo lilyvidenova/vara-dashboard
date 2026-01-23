@@ -317,7 +317,7 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
       {/* Main Content */}
       <div className="mt-8 flex flex-col gap-6 lg:flex-row lg:items-start">
         {/* Score Card and Industry Comparison */}
-        <div className="flex w-full flex-col gap-4 lg:w-auto lg:shrink-0">
+        <div className="flex w-full flex-col gap-4 lg:w-1/2">
           <ScoreCard
             title={`Content Impact Score for ${platform.name}`}
             score={scoreData.score}
