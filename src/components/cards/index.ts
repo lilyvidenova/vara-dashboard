@@ -1,4 +1,5 @@
 export { BaseCard, type BaseCardProps } from './BaseCard'
+export { StatCard, type StatCardProps } from './StatCard'
 export { StatusBadge, type StatusBadgeProps } from './StatusBadge'
 export { ChangeIndicator, type ChangeIndicatorProps } from './ChangeIndicator'
 export { GaugeVisualization, type GaugeVisualizationProps, type GaugeStatus } from './GaugeVisualization'
