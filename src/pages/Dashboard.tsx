@@ -23,6 +23,9 @@ import {
 } from '@/components/sections'
 import type { PlatformData, BusinessOutcome, AITip, ContentItem } from '@/components/sections'
 import { ContentImpactGrowthChart, ContentImpactEfficiencyChart } from '@/components/charts'
+import { useAppNavigation } from '@/hooks/useAppNavigation'
+import type { PlatformId } from '@/types/platforms'
+import type { OutcomeId } from '@/types/outcomes'
 
 // Sample chart data
 const CHART_DATA = [
@@ -244,8 +247,9 @@ const WORST_CONTENT_DATA: ContentItem[] = [
   },
 ]
 
-export function OverallPerformance() {
+export function Dashboard() {
   const [dateFilter, setDateFilter] = useState('Last Year')
+  const { goToFinancial, goToPlatform, goToOutcome } = useAppNavigation()
 
   const handleSearch = (query: string) => {
     console.log('Search:', query)
@@ -324,7 +328,7 @@ export function OverallPerformance() {
             value: '+13%',
             breakdown: [{ label: 'Financial Return', value: '£66k' }],
           }}
-          onMoreDetail={() => console.log('More detail clicked')}
+          onMoreDetail={goToFinancial}
         />
       </div>
 
@@ -354,7 +358,7 @@ export function OverallPerformance() {
         <PlatformPerformanceSection
           platforms={PLATFORM_DATA}
           aiInsight="Instagram shows both high performance and high scale, making it your most valuable platform. Consider increasing content production there while exploring ways to improve TikTok's underperformance."
-          onMoreDetail={(platformId) => console.log('More detail for', platformId)}
+          onMoreDetail={(platformId) => goToPlatform(platformId as PlatformId)}
           className="lg:flex-1"
         />
       </div>
@@ -373,7 +377,7 @@ export function OverallPerformance() {
             { icon: Zap, label: 'Efficiency', value: 78, unit: '/post' },
             { icon: TrendingUp, label: 'Growth', value: '+ 54%' },
           ]}
-          onMoreDetail={() => console.log('Brand Awareness more detail')}
+          onMoreDetail={() => goToOutcome('brand-awareness')}
           className="lg:flex-1"
         />
         <MetricsCardReusable
@@ -388,7 +392,7 @@ export function OverallPerformance() {
             { icon: Zap, label: 'Efficiency', value: 39, unit: '/post' },
             { icon: TrendingUp, label: 'Growth', value: '+ 14%' },
           ]}
-          onMoreDetail={() => console.log('Engagement more detail')}
+          onMoreDetail={() => goToOutcome('engagement')}
           className="lg:flex-1"
         />
         <MetricsCardReusable
@@ -403,7 +407,7 @@ export function OverallPerformance() {
             { icon: Zap, label: 'Efficiency', value: 49, unit: '/post' },
             { icon: TrendingUp, label: 'Growth', value: '- 31%' },
           ]}
-          onMoreDetail={() => console.log('Targeting more detail')}
+          onMoreDetail={() => goToOutcome('targeting')}
           className="lg:flex-1"
         />
       </div>
@@ -412,7 +416,7 @@ export function OverallPerformance() {
       <div className="mt-8 flex flex-col gap-6 lg:flex-row">
         <OtherBusinessOutcomesSection
           outcomes={BUSINESS_OUTCOMES_DATA}
-          onMoreDetail={(outcomeId) => console.log('More detail for', outcomeId)}
+          onMoreDetail={(outcomeId) => goToOutcome(outcomeId as OutcomeId)}
           className="lg:w-2/3"
         />
         <AIHotTipsSection tips={AI_TIPS_DATA} className="lg:w-1/3" />
