@@ -35,6 +35,7 @@ export {
   type AgeGroupBreakdownCardProps,
   type AgeGroupData,
   type AgeGroupStatus,
+  type PercentageAgeGroupData,
 } from './AgeGroupBreakdownCard'
 export {
   GenderBreakdownCard,
