@@ -29,7 +29,7 @@ export function OutcomeScoreCard({
       padding="none"
       className={cn('p-6', className)}
     >
-      <div className="flex flex-col items-center gap-6">
+      <div className="flex h-full flex-col items-center justify-center gap-6">
         {/* Title */}
         <div className="w-full">
           <h2 className="text-xl font-bold text-foreground">

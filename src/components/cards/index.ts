@@ -29,3 +29,9 @@ export {
   type AgeGroupData,
   type AgeGroupStatus,
 } from './AgeGroupBreakdownCard'
+export {
+  GenderBreakdownCard,
+  type GenderBreakdownCardProps,
+  type GenderScoreData,
+  type GenderStatus,
+} from './GenderBreakdownCard'

@@ -7,9 +7,19 @@ import {
   OutcomeDescriptionCard,
   IndustryComparisonCard,
   AgeGroupBreakdownCard,
+  GenderBreakdownCard,
   type OutcomeStatus,
   type AgeGroupData,
+  type GenderScoreData,
 } from '@/components/cards'
+import {
+  ContentImpactGrowthChart,
+  type ChartDataPoint,
+} from '@/components/charts/ContentImpactGrowthChart'
+import {
+  ContentImpactEfficiencyChart,
+  type EfficiencyDataPoint,
+} from '@/components/charts/ContentImpactEfficiencyChart'
 import { useAppNavigation } from '@/hooks/useAppNavigation'
 
 import type { OutcomeConfig, OutcomeId } from '@/types/outcomes'
@@ -172,6 +182,232 @@ const AGE_GROUP_DATA: Record<OutcomeId, AgeGroupData[]> = {
   ],
 }
 
+// Gender breakdown data for each outcome
+const GENDER_DATA: Record<OutcomeId, GenderScoreData[]> = {
+  'brand-awareness': [
+    { gender: 'Men', score: 712, status: 'strong', fill: '#85c6db' },
+    { gender: 'Women', score: 798, status: 'strong', isTarget: true, fill: '#0164a3' },
+  ],
+  'engagement': [
+    { gender: 'Men', score: 156, status: 'underperforming', fill: '#85c6db' },
+    { gender: 'Women', score: 108, status: 'underperforming', isTarget: true, fill: '#0164a3' },
+  ],
+  'targeting': [
+    { gender: 'Men', score: 645, status: 'healthy', fill: '#85c6db' },
+    { gender: 'Women', score: 691, status: 'healthy', isTarget: true, fill: '#0164a3' },
+  ],
+  'audience-satisfaction': [
+    { gender: 'Men', score: 524, status: 'healthy', fill: '#85c6db' },
+    { gender: 'Women', score: 848, status: 'exceptional', isTarget: true, fill: '#0164a3' },
+  ],
+  'audience-loyalty': [
+    { gender: 'Men', score: 467, status: 'healthy', fill: '#85c6db' },
+    { gender: 'Women', score: 512, status: 'healthy', isTarget: true, fill: '#0164a3' },
+  ],
+}
+
+// Growth chart data for each outcome
+const GROWTH_DATA: Record<OutcomeId, {
+  percentageChange: string
+  changeDirection: 'up' | 'down'
+  data: ChartDataPoint[]
+}> = {
+  'brand-awareness': {
+    percentageChange: '+32%',
+    changeDirection: 'up',
+    data: [
+      { month: 'Jan', value: 420 },
+      { month: 'Feb', value: 445 },
+      { month: 'Mar', value: 460 },
+      { month: 'Apr', value: 478 },
+      { month: 'May', value: 495 },
+      { month: 'Jun', value: 520 },
+      { month: 'Jul', value: 548 },
+      { month: 'Aug', value: 572 },
+      { month: 'Sep', value: 598 },
+      { month: 'Oct', value: 625 },
+      { month: 'Nov', value: 652 },
+      { month: 'Dec', value: 680 },
+    ],
+  },
+  'engagement': {
+    percentageChange: '-18%',
+    changeDirection: 'down',
+    data: [
+      { month: 'Jan', value: 180 },
+      { month: 'Feb', value: 175 },
+      { month: 'Mar', value: 168 },
+      { month: 'Apr', value: 162 },
+      { month: 'May', value: 155 },
+      { month: 'Jun', value: 148 },
+      { month: 'Jul', value: 145 },
+      { month: 'Aug', value: 140 },
+      { month: 'Sep', value: 138 },
+      { month: 'Oct', value: 135 },
+      { month: 'Nov', value: 133 },
+      { month: 'Dec', value: 132 },
+    ],
+  },
+  'targeting': {
+    percentageChange: '+12%',
+    changeDirection: 'up',
+    data: [
+      { month: 'Jan', value: 520 },
+      { month: 'Feb', value: 535 },
+      { month: 'Mar', value: 548 },
+      { month: 'Apr', value: 562 },
+      { month: 'May', value: 578 },
+      { month: 'Jun', value: 590 },
+      { month: 'Jul', value: 605 },
+      { month: 'Aug', value: 618 },
+      { month: 'Sep', value: 632 },
+      { month: 'Oct', value: 645 },
+      { month: 'Nov', value: 658 },
+      { month: 'Dec', value: 668 },
+    ],
+  },
+  'audience-satisfaction': {
+    percentageChange: '+46%',
+    changeDirection: 'up',
+    data: [
+      { month: 'Jan', value: 280 },
+      { month: 'Feb', value: 295 },
+      { month: 'Mar', value: 310 },
+      { month: 'Apr', value: 345 },
+      { month: 'May', value: 380 },
+      { month: 'Jun', value: 395 },
+      { month: 'Jul', value: 420 },
+      { month: 'Aug', value: 445 },
+      { month: 'Sep', value: 478 },
+      { month: 'Oct', value: 512 },
+      { month: 'Nov', value: 538 },
+      { month: 'Dec', value: 564 },
+    ],
+  },
+  'audience-loyalty': {
+    percentageChange: '+24%',
+    changeDirection: 'up',
+    data: [
+      { month: 'Jan', value: 320 },
+      { month: 'Feb', value: 335 },
+      { month: 'Mar', value: 348 },
+      { month: 'Apr', value: 365 },
+      { month: 'May', value: 382 },
+      { month: 'Jun', value: 398 },
+      { month: 'Jul', value: 415 },
+      { month: 'Aug', value: 432 },
+      { month: 'Sep', value: 448 },
+      { month: 'Oct', value: 462 },
+      { month: 'Nov', value: 475 },
+      { month: 'Dec', value: 486 },
+    ],
+  },
+}
+
+// Efficiency chart data for each outcome
+const EFFICIENCY_DATA: Record<OutcomeId, {
+  metricValue: number
+  metricDirection: 'up' | 'down'
+  unitLabel: string
+  data: EfficiencyDataPoint[]
+}> = {
+  'brand-awareness': {
+    metricValue: 52,
+    metricDirection: 'up',
+    unitLabel: '/new content piece',
+    data: [
+      { month: 'Jan', value: 38 },
+      { month: 'Feb', value: 42 },
+      { month: 'Mar', value: 45 },
+      { month: 'Apr', value: 48 },
+      { month: 'May', value: 46 },
+      { month: 'Jun', value: 50 },
+      { month: 'Jul', value: 52 },
+      { month: 'Aug', value: 55 },
+      { month: 'Sep', value: 54 },
+      { month: 'Oct', value: 58 },
+      { month: 'Nov', value: 56 },
+      { month: 'Dec', value: 52 },
+    ],
+  },
+  'engagement': {
+    metricValue: 12,
+    metricDirection: 'down',
+    unitLabel: '/new content piece',
+    data: [
+      { month: 'Jan', value: 28 },
+      { month: 'Feb', value: 25 },
+      { month: 'Mar', value: 22 },
+      { month: 'Apr', value: 20 },
+      { month: 'May', value: 18 },
+      { month: 'Jun', value: 16 },
+      { month: 'Jul', value: 15 },
+      { month: 'Aug', value: 14 },
+      { month: 'Sep', value: 13 },
+      { month: 'Oct', value: 12 },
+      { month: 'Nov', value: 12 },
+      { month: 'Dec', value: 12 },
+    ],
+  },
+  'targeting': {
+    metricValue: 34,
+    metricDirection: 'up',
+    unitLabel: '/new content piece',
+    data: [
+      { month: 'Jan', value: 28 },
+      { month: 'Feb', value: 30 },
+      { month: 'Mar', value: 29 },
+      { month: 'Apr', value: 32 },
+      { month: 'May', value: 31 },
+      { month: 'Jun', value: 33 },
+      { month: 'Jul', value: 35 },
+      { month: 'Aug', value: 34 },
+      { month: 'Sep', value: 36 },
+      { month: 'Oct', value: 35 },
+      { month: 'Nov', value: 34 },
+      { month: 'Dec', value: 34 },
+    ],
+  },
+  'audience-satisfaction': {
+    metricValue: 40,
+    metricDirection: 'up',
+    unitLabel: '/new content piece',
+    data: [
+      { month: 'Jan', value: 22 },
+      { month: 'Feb', value: 25 },
+      { month: 'Mar', value: 28 },
+      { month: 'Apr', value: 30 },
+      { month: 'May', value: 32 },
+      { month: 'Jun', value: 35 },
+      { month: 'Jul', value: 36 },
+      { month: 'Aug', value: 38 },
+      { month: 'Sep', value: 39 },
+      { month: 'Oct', value: 40 },
+      { month: 'Nov', value: 41 },
+      { month: 'Dec', value: 40 },
+    ],
+  },
+  'audience-loyalty': {
+    metricValue: 28,
+    metricDirection: 'up',
+    unitLabel: '/new content piece',
+    data: [
+      { month: 'Jan', value: 20 },
+      { month: 'Feb', value: 22 },
+      { month: 'Mar', value: 23 },
+      { month: 'Apr', value: 24 },
+      { month: 'May', value: 25 },
+      { month: 'Jun', value: 26 },
+      { month: 'Jul', value: 27 },
+      { month: 'Aug', value: 27 },
+      { month: 'Sep', value: 28 },
+      { month: 'Oct', value: 28 },
+      { month: 'Nov', value: 28 },
+      { month: 'Dec', value: 28 },
+    ],
+  },
+}
+
 export interface OutcomeDetailPageProps {
   outcome: OutcomeConfig
 }
@@ -227,41 +463,82 @@ export function OutcomeDetailPage({ outcome }: OutcomeDetailPageProps) {
         }}
       />
 
-      {/* Cards Section */}
-      <div className="mt-8 grid grid-cols-1 gap-3 lg:grid-cols-2">
-        {/* Score Card */}
-        <OutcomeScoreCard
-          title={`${outcome.name} Score`}
-          score={OUTCOME_DATA[outcome.id].score}
-          status={OUTCOME_DATA[outcome.id].status}
-          statusLabel={OUTCOME_DATA[outcome.id].statusLabel}
-          changeValue={OUTCOME_DATA[outcome.id].changeValue}
-          changeDirection={OUTCOME_DATA[outcome.id].changeDirection}
-        />
+      {/* Main Content - Horizontal on desktop, vertical on mobile */}
+      <div className="mt-8 flex flex-col gap-3 lg:flex-row lg:items-stretch">
+        {/* Left Side: Cards stacked vertically */}
+        <div className="flex flex-col gap-3 lg:w-[70%]">
+          {/* Row 1: Score Card + Description/Industry */}
+          <div className="flex flex-col gap-3 lg:flex-row">
+            <div className="lg:w-[36%]">
+              <OutcomeScoreCard
+                title={`${outcome.name} Score`}
+                score={OUTCOME_DATA[outcome.id].score}
+                status={OUTCOME_DATA[outcome.id].status}
+                statusLabel={OUTCOME_DATA[outcome.id].statusLabel}
+                changeValue={OUTCOME_DATA[outcome.id].changeValue}
+                changeDirection={OUTCOME_DATA[outcome.id].changeDirection}
+                className="h-full"
+              />
+            </div>
+            <div className="flex flex-col gap-3 lg:w-[64%]">
+              <OutcomeDescriptionCard
+                title={OUTCOME_DESCRIPTIONS[outcome.id].title}
+                description={OUTCOME_DESCRIPTIONS[outcome.id].description}
+              />
+              <IndustryComparisonCard
+                userScore={INDUSTRY_COMPARISON_DATA[outcome.id].userScore}
+                industryLeaderScore={INDUSTRY_COMPARISON_DATA[outcome.id].industryLeaderScore}
+                percentageDiff={INDUSTRY_COMPARISON_DATA[outcome.id].percentageDiff}
+                comparisonDirection={INDUSTRY_COMPARISON_DATA[outcome.id].comparisonDirection}
+                description={INDUSTRY_COMPARISON_DATA[outcome.id].description}
+              />
+            </div>
+          </div>
 
-        {/* Description and Industry Comparison Cards - Stacked */}
-        <div className="flex flex-col gap-3">
-          <OutcomeDescriptionCard
-            title={OUTCOME_DESCRIPTIONS[outcome.id].title}
-            description={OUTCOME_DESCRIPTIONS[outcome.id].description}
-          />
-          <IndustryComparisonCard
-            userScore={INDUSTRY_COMPARISON_DATA[outcome.id].userScore}
-            industryLeaderScore={INDUSTRY_COMPARISON_DATA[outcome.id].industryLeaderScore}
-            percentageDiff={INDUSTRY_COMPARISON_DATA[outcome.id].percentageDiff}
-            comparisonDirection={INDUSTRY_COMPARISON_DATA[outcome.id].comparisonDirection}
-            description={INDUSTRY_COMPARISON_DATA[outcome.id].description}
-          />
+          {/* Row 2: Age Group + Gender - horizontal on desktop */}
+          <div className="flex flex-col gap-3 lg:flex-row">
+            <div className="lg:w-1/2">
+              <AgeGroupBreakdownCard
+                title={`${outcome.name} Score by Age Group`}
+                subtitle="Identify high-performing and underperforming age segments"
+                data={AGE_GROUP_DATA[outcome.id]}
+              />
+            </div>
+            <div className="lg:w-1/2">
+              <GenderBreakdownCard
+                title={`${outcome.name} Score By Gender`}
+                subtitle="Ensure your target gender is performing well"
+                data={GENDER_DATA[outcome.id]}
+                className="h-full"
+              />
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* Age Group Breakdown Card */}
-      <div className="mt-6">
-        <AgeGroupBreakdownCard
-          title={`${outcome.name} Score by Age Group`}
-          subtitle="Identify high-performing and underperforming age segments"
-          data={AGE_GROUP_DATA[outcome.id]}
-        />
+        {/* Right Side: Growth and Efficiency Charts stacked vertically */}
+        <div className="flex flex-col gap-3 lg:h-full lg:w-[30%]">
+          <div className="flex-1">
+            <ContentImpactGrowthChart
+              title={`${outcome.name} Growth`}
+              percentageChange={GROWTH_DATA[outcome.id].percentageChange}
+              changeDirection={GROWTH_DATA[outcome.id].changeDirection}
+              description={`${outcome.name} periodic change`}
+              data={GROWTH_DATA[outcome.id].data}
+              showIcon={false}
+              className="h-full"
+            />
+          </div>
+          <div className="flex-1">
+            <ContentImpactEfficiencyChart
+              title={`${outcome.name} Efficiency`}
+              metricValue={EFFICIENCY_DATA[outcome.id].metricValue}
+              metricDirection={EFFICIENCY_DATA[outcome.id].metricDirection}
+              unitLabel={EFFICIENCY_DATA[outcome.id].unitLabel}
+              data={EFFICIENCY_DATA[outcome.id].data}
+              className="h-full"
+            />
+          </div>
+        </div>
       </div>
     </DashboardLayout>
   )
