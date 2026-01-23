@@ -362,6 +362,36 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 ```
 
+## Workflow Instructions
+
+### Implementing Components from Figma Designs
+
+When asked to implement a component from Figma (or any design), always follow this workflow:
+
+1. **Fetch the design context** from the selected Figma frame
+2. **Create a detailed implementation plan** before writing any code
+3. **Confirm understanding** with the user - verify expectations for the component and any functionality
+4. **Ask questions** about anything that's not clear
+5. **State any assumptions** you make
+6. **Wait for user approval** before implementing
+7. **Create a reusable React component** with TypeScript
+8. **Match the design exactly** (spacing, colors, typography, etc.)
+9. **Ensure code quality** - well documented and following best practices for React and TypeScript
+10. **Export the component** from the appropriate index file (`src/components/cards/index.ts`)
+
+### Git Workflow for Changes
+
+When work is complete and ready to be committed, or when asked to commit/merge changes:
+
+1. **Create a new feature branch** with a descriptive name based on the changes
+2. **Stage and commit** all changes with a meaningful commit message
+3. **Push the branch** to the remote repository
+4. **Create a pull request** with a clear title and description summarizing the changes
+5. **Merge the PR** into main
+6. **Switch back to main** and pull the latest changes
+
+Always include `Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>` in commit messages.
+
 ## Notes
 
 - **Mobile-first**: Always start with mobile styles, then add breakpoint overrides
