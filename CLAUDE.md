@@ -14,6 +14,7 @@ This file provides guidance to Claude Code when working with code in this reposi
 - **Radix UI** - Accessible component primitives
 - **React Router v6** - Client-side routing
 - **Lucide React** - Icon library
+- **Recharts 3** - Charting library for data visualizations
 
 ## Project Structure
 
@@ -37,6 +38,12 @@ vara-dashboard/
 │   │   │   ├── MetricItem.tsx     # Icon + label + value
 │   │   │   ├── MoreDetailButton.tsx # Action button
 │   │   │   ├── MetricsCard.tsx    # Main composite card
+│   │   │   ├── StatCard.tsx       # Simple stat display card
+│   │   │   └── index.ts
+│   │   ├── charts/                # Chart components (Recharts)
+│   │   │   ├── ChartTooltip.tsx   # Reusable chart tooltip
+│   │   │   ├── ContentImpactGrowthChart.tsx  # Area chart
+│   │   │   ├── ContentImpactEfficiencyChart.tsx # Bar chart
 │   │   │   └── index.ts
 │   │   └── layout/                # Layout components
 │   │       ├── Header.tsx
@@ -242,6 +249,97 @@ import { MetricItem } from '@/components/cards'
   suffix="/post"
 />
 ```
+
+**StatCard** - Simple stat display with optional change indicator:
+```tsx
+import { StatCard } from '@/components/cards'
+
+<StatCard
+  icon={<Users className="h-full w-full" />}
+  title="Shares"
+  value="563"
+  change={{ value: '12%', direction: 'up' }}  // Optional
+  description="Total video shares across all content"
+/>
+```
+
+### Chart Components (Recharts)
+
+The project uses **Recharts 3** for data visualizations. All charts are located in `src/components/charts/`.
+
+**Common Recharts patterns used in this project:**
+
+```tsx
+import {
+  AreaChart, Area,           // For area/line charts
+  BarChart, Bar, Cell,       // For bar charts
+  XAxis, YAxis,              // Axes
+  ResponsiveContainer,       // Responsive wrapper
+  Tooltip,                   // Tooltips
+} from 'recharts'
+```
+
+**ContentImpactGrowthChart** - Area chart with gradient fill:
+```tsx
+import { ContentImpactGrowthChart } from '@/components/charts'
+
+const data = [
+  { month: 'Jan', value: 400 },
+  { month: 'Feb', value: 520 },
+  // ...
+]
+
+<ContentImpactGrowthChart
+  data={data}
+  title="Content Impact Growth"
+  percentageChange="+24%"
+  changeDirection="up"
+  description="Periodic change in your Content Impact Score"
+  animated={true}
+  animationDuration={1500}
+/>
+```
+
+**ContentImpactEfficiencyChart** - Bar chart with gradient fill:
+```tsx
+import { ContentImpactEfficiencyChart } from '@/components/charts'
+
+<ContentImpactEfficiencyChart
+  data={data}
+  title="Content Impact Efficiency"
+  metricValue={54}
+  metricDirection="up"
+  unitLabel="/new content piece"
+  animated={true}
+/>
+```
+
+**ChartTooltip** - Custom tooltip with glass effect:
+```tsx
+import { ChartTooltipWrapper } from '@/components/charts'
+
+// Inside a Recharts chart:
+<Tooltip
+  content={
+    <ChartTooltipWrapper
+      formatTitle={(label) => `${label} 2025`}
+      formatItems={(payload) => [
+        { icon: Gauge, label: 'Score', value: payload[0]?.value ?? 0 },
+        { icon: Zap, label: 'Growth', value: '+15%' },
+      ]}
+    />
+  }
+/>
+```
+
+**Recharts best practices in this project:**
+
+1. Always wrap charts in `<ResponsiveContainer width="100%" height={240}>`
+2. Use gradient definitions in `<defs>` for fills
+3. Use the custom `ChartTooltipWrapper` for consistent tooltip styling
+4. Configure animations via `isAnimationActive`, `animationDuration`, `animationBegin`
+5. Style axes with design tokens: `tick={{ fill: '#52525b', fontSize: 12, fontWeight: 'bold' }}`
+6. Hide Y-axis with `<YAxis hide domain={[0, 'dataMax + 10']} />`
 
 ### Responsive Hooks
 
