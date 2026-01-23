@@ -315,9 +315,9 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
       />
 
       {/* Main Content */}
-      <div className="mt-8 flex flex-col gap-6">
-        {/* Score Card and Industry Comparison - centered with max width */}
-        <div className="mx-auto flex w-full max-w-xl flex-col gap-4">
+      <div className="mt-8 flex flex-col gap-6 lg:flex-row lg:items-start">
+        {/* Score Card and Industry Comparison */}
+        <div className="flex w-full flex-col gap-4 lg:w-auto lg:shrink-0">
           <ScoreCard
             title={`Content Impact Score for ${platform.name}`}
             score={scoreData.score}
@@ -338,7 +338,7 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
         </div>
 
         {/* Platform Stats Grid */}
-        <div className="mx-auto grid w-full max-w-xl grid-cols-2 gap-6">
+        <div className="grid w-full grid-cols-2 gap-6 lg:flex-1">
           {statsData.map((stat, index) => (
             <StatCard
               key={index}
