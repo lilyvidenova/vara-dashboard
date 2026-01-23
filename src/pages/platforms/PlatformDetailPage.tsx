@@ -25,6 +25,10 @@ import {
   StatCard,
   type OutcomeStatus,
 } from '@/components/cards'
+import {
+  ContentImpactGrowthChart,
+  type ChartDataPoint,
+} from '@/components/charts'
 import { useAppNavigation } from '@/hooks/useAppNavigation'
 
 import type { PlatformConfig, PlatformId } from '@/types/platforms'
@@ -249,6 +253,142 @@ const STAT_ICONS: Record<StatCardConfig['icon'], React.ReactNode> = {
   completion: <CircleCheck className="h-full w-full" />,
 }
 
+/**
+ * Platform growth chart data - would come from API in production
+ */
+const PLATFORM_GROWTH_DATA: Record<PlatformId, {
+  title: string
+  description: string
+  data: ChartDataPoint[]
+}> = {
+  youtube: {
+    title: 'YouTube Growth',
+    description: 'YouTube subscriber changes over the period',
+    data: [
+      { month: 'Jan', value: 2100000, date: 'Jan 15' },
+      { month: 'Feb', value: 2150000, date: 'Feb 12' },
+      { month: 'Mar', value: 2180000, date: 'Mar 20' },
+      { month: 'Apr', value: 2220000, date: 'Apr 18' },
+      { month: 'May', value: 2280000, date: 'May 25' },
+      { month: 'Jun', value: 2320000, date: 'Jun 10' },
+      { month: 'Jul', value: 2350000, date: 'Jul 22' },
+      { month: 'Aug', value: 2380000, date: 'Aug 28' },
+      { month: 'Sep', value: 2400000, date: 'Sep 15' },
+      { month: 'Oct', value: 2420000, date: 'Oct 8' },
+      { month: 'Nov', value: 2450000, date: 'Nov 19' },
+      { month: 'Dec', value: 2500000, date: 'Dec 30' },
+    ],
+  },
+  tiktok: {
+    title: 'TikTok Growth',
+    description: 'TikTok subscriber changes over the period',
+    data: [
+      { month: 'Jan', value: 15000, date: 'Jan 10' },
+      { month: 'Feb', value: 18000, date: 'Feb 14' },
+      { month: 'Mar', value: 22000, date: 'Mar 22' },
+      { month: 'Apr', value: 28000, date: 'Apr 5' },
+      { month: 'May', value: 35000, date: 'May 18' },
+      { month: 'Jun', value: 42000, date: 'Jun 28' },
+      { month: 'Jul', value: 52000, date: 'Jul 12' },
+      { month: 'Aug', value: 40163, date: 'Aug 28' },
+      { month: 'Sep', value: 68000, date: 'Sep 9' },
+      { month: 'Oct', value: 78000, date: 'Oct 21' },
+      { month: 'Nov', value: 88000, date: 'Nov 15' },
+      { month: 'Dec', value: 100000, date: 'Dec 25' },
+    ],
+  },
+  instagram: {
+    title: 'Instagram Growth',
+    description: 'Instagram follower changes over the period',
+    data: [
+      { month: 'Jan', value: 720000, date: 'Jan 8' },
+      { month: 'Feb', value: 735000, date: 'Feb 20' },
+      { month: 'Mar', value: 750000, date: 'Mar 15' },
+      { month: 'Apr', value: 768000, date: 'Apr 22' },
+      { month: 'May', value: 785000, date: 'May 10' },
+      { month: 'Jun', value: 800000, date: 'Jun 5' },
+      { month: 'Jul', value: 815000, date: 'Jul 18' },
+      { month: 'Aug', value: 830000, date: 'Aug 25' },
+      { month: 'Sep', value: 842000, date: 'Sep 12' },
+      { month: 'Oct', value: 850000, date: 'Oct 30' },
+      { month: 'Nov', value: 855000, date: 'Nov 8' },
+      { month: 'Dec', value: 865000, date: 'Dec 20' },
+    ],
+  },
+  facebook: {
+    title: 'Facebook Growth',
+    description: 'Facebook page follower changes over the period',
+    data: [
+      { month: 'Jan', value: 1050000, date: 'Jan 5' },
+      { month: 'Feb', value: 1065000, date: 'Feb 18' },
+      { month: 'Mar', value: 1080000, date: 'Mar 12' },
+      { month: 'Apr', value: 1095000, date: 'Apr 25' },
+      { month: 'May', value: 1110000, date: 'May 8' },
+      { month: 'Jun', value: 1125000, date: 'Jun 15' },
+      { month: 'Jul', value: 1140000, date: 'Jul 22' },
+      { month: 'Aug', value: 1155000, date: 'Aug 10' },
+      { month: 'Sep', value: 1170000, date: 'Sep 28' },
+      { month: 'Oct', value: 1185000, date: 'Oct 15' },
+      { month: 'Nov', value: 1195000, date: 'Nov 5' },
+      { month: 'Dec', value: 1210000, date: 'Dec 18' },
+    ],
+  },
+  x: {
+    title: 'X Growth',
+    description: 'X follower changes over the period',
+    data: [
+      { month: 'Jan', value: 450000, date: 'Jan 12' },
+      { month: 'Feb', value: 458000, date: 'Feb 8' },
+      { month: 'Mar', value: 465000, date: 'Mar 25' },
+      { month: 'Apr', value: 475000, date: 'Apr 15' },
+      { month: 'May', value: 485000, date: 'May 20' },
+      { month: 'Jun', value: 492000, date: 'Jun 10' },
+      { month: 'Jul', value: 500000, date: 'Jul 5' },
+      { month: 'Aug', value: 508000, date: 'Aug 18' },
+      { month: 'Sep', value: 515000, date: 'Sep 22' },
+      { month: 'Oct', value: 520000, date: 'Oct 10' },
+      { month: 'Nov', value: 522000, date: 'Nov 28' },
+      { month: 'Dec', value: 525000, date: 'Dec 15' },
+    ],
+  },
+  linkedin: {
+    title: 'LinkedIn Growth',
+    description: 'LinkedIn company page follower changes over the period',
+    data: [
+      { month: 'Jan', value: 95000, date: 'Jan 20' },
+      { month: 'Feb', value: 98000, date: 'Feb 15' },
+      { month: 'Mar', value: 102000, date: 'Mar 8' },
+      { month: 'Apr', value: 105000, date: 'Apr 12' },
+      { month: 'May', value: 108000, date: 'May 25' },
+      { month: 'Jun', value: 112000, date: 'Jun 18' },
+      { month: 'Jul', value: 115000, date: 'Jul 10' },
+      { month: 'Aug', value: 118000, date: 'Aug 22' },
+      { month: 'Sep', value: 120000, date: 'Sep 5' },
+      { month: 'Oct', value: 122000, date: 'Oct 28' },
+      { month: 'Nov', value: 124000, date: 'Nov 15' },
+      { month: 'Dec', value: 128000, date: 'Dec 8' },
+    ],
+  },
+  snapchat: {
+    title: 'Snapchat Growth',
+    description: 'Snapchat subscriber changes over the period',
+    data: [
+      { month: 'Jan', value: 65000, date: 'Jan 18' },
+      { month: 'Feb', value: 68000, date: 'Feb 10' },
+      { month: 'Mar', value: 70000, date: 'Mar 22' },
+      { month: 'Apr', value: 72000, date: 'Apr 8' },
+      { month: 'May', value: 75000, date: 'May 15' },
+      { month: 'Jun', value: 78000, date: 'Jun 25' },
+      { month: 'Jul', value: 80000, date: 'Jul 12' },
+      { month: 'Aug', value: 82000, date: 'Aug 28' },
+      { month: 'Sep', value: 84000, date: 'Sep 18' },
+      { month: 'Oct', value: 86000, date: 'Oct 5' },
+      { month: 'Nov', value: 88000, date: 'Nov 22' },
+      { month: 'Dec', value: 90000, date: 'Dec 10' },
+    ],
+  },
+}
+
 export interface PlatformDetailPageProps {
   platform: PlatformConfig
 }
@@ -266,6 +406,7 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
   const scoreData = PLATFORM_SCORE_DATA[platform.id]
   const industryData = PLATFORM_INDUSTRY_DATA[platform.id]
   const statsData = PLATFORM_STATS_DATA[platform.id]
+  const growthData = PLATFORM_GROWTH_DATA[platform.id]
 
   const handleSearch = (query: string) => {
     console.log('Search:', query)
@@ -350,6 +491,19 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
             />
           ))}
         </div>
+      </div>
+
+      {/* Growth Chart */}
+      <div className="mt-6">
+        <ContentImpactGrowthChart
+          title={growthData.title}
+          description={growthData.description}
+          data={growthData.data}
+          showHeaderMetrics={false}
+          showYAxis={true}
+          showSeparator={true}
+          simpleTooltip={true}
+        />
       </div>
     </DashboardLayout>
   )
