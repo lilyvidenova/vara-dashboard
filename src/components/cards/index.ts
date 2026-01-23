@@ -21,7 +21,13 @@ export {
   type MetricStatData,
 } from './MetricsCardReusable'
 export { OutcomeGauge, type OutcomeGaugeProps, type OutcomeStatus } from './OutcomeGauge'
-export { OutcomeScoreCard, type OutcomeScoreCardProps } from './OutcomeScoreCard'
+export {
+  ScoreCard,
+  type ScoreCardProps,
+  // Deprecated aliases for backwards compatibility
+  OutcomeScoreCard,
+  type OutcomeScoreCardProps,
+} from './ScoreCard'
 export { OutcomeDescriptionCard, type OutcomeDescriptionCardProps } from './OutcomeDescriptionCard'
 export {
   AgeGroupBreakdownCard,
