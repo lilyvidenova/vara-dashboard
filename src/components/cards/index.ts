@@ -22,3 +22,10 @@ export {
 } from './MetricsCardReusable'
 export { OutcomeGauge, type OutcomeGaugeProps, type OutcomeStatus } from './OutcomeGauge'
 export { OutcomeScoreCard, type OutcomeScoreCardProps } from './OutcomeScoreCard'
+export { OutcomeDescriptionCard, type OutcomeDescriptionCardProps } from './OutcomeDescriptionCard'
+export {
+  AgeGroupBreakdownCard,
+  type AgeGroupBreakdownCardProps,
+  type AgeGroupData,
+  type AgeGroupStatus,
+} from './AgeGroupBreakdownCard'
