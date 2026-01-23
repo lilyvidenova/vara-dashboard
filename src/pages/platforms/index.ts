@@ -1,0 +1,8 @@
+export { PlatformDetailPage, type PlatformDetailPageProps } from './PlatformDetailPage'
+export { InstagramPage } from './InstagramPage'
+export { TikTokPage } from './TikTokPage'
+export { YouTubePage } from './YouTubePage'
+export { XPage } from './XPage'
+export { FacebookPage } from './FacebookPage'
+export { SnapchatPage } from './SnapchatPage'
+export { LinkedInPage } from './LinkedInPage'
