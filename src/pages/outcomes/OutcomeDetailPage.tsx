@@ -21,7 +21,7 @@ import {
 import { DashboardLayout } from '@/components/layout'
 import { PageHeader } from '@/components/layout/PageHeader'
 import {
-  OutcomeScoreCard,
+  ScoreCard,
   OutcomeDescriptionCard,
   IndustryComparisonCard,
   AgeGroupBreakdownCard,
@@ -794,7 +794,7 @@ export function OutcomeDetailPage({ outcome }: OutcomeDetailPageProps) {
           {/* Row 1: Score Card + Description/Industry */}
           <div className="flex flex-col gap-3 lg:flex-row">
             <div className="lg:w-[36%]">
-              <OutcomeScoreCard
+              <ScoreCard
                 title={`${outcome.name} Score`}
                 score={OUTCOME_DATA[outcome.id].score}
                 status={OUTCOME_DATA[outcome.id].status}
