@@ -13,7 +13,7 @@ import {
 
 import { DashboardLayout } from '@/components/layout'
 import { PageHeader } from '@/components/layout/PageHeader'
-import { ScoreCard, type OutcomeStatus } from '@/components/cards'
+import { ScoreCard, IndustryComparisonCard, type OutcomeStatus } from '@/components/cards'
 import { useAppNavigation } from '@/hooks/useAppNavigation'
 
 import type { PlatformConfig, PlatformId } from '@/types/platforms'
@@ -92,6 +92,67 @@ const PLATFORM_SCORE_DATA: Record<PlatformId, {
   },
 }
 
+/**
+ * Platform industry comparison data - would come from API in production
+ */
+const PLATFORM_INDUSTRY_DATA: Record<PlatformId, {
+  userScore: number
+  industryLeaderScore: number
+  percentageDiff: string
+  comparisonDirection: 'up' | 'down'
+  description: string
+}> = {
+  youtube: {
+    userScore: 881,
+    industryLeaderScore: 920,
+    percentageDiff: '-4%',
+    comparisonDirection: 'down',
+    description: 'Very close to industry leader performance',
+  },
+  tiktok: {
+    userScore: 465,
+    industryLeaderScore: 758,
+    percentageDiff: '-16%',
+    comparisonDirection: 'down',
+    description: 'Slightly underperforming the industry leader',
+  },
+  instagram: {
+    userScore: 756,
+    industryLeaderScore: 845,
+    percentageDiff: '-11%',
+    comparisonDirection: 'down',
+    description: 'Approaching industry leader benchmark',
+  },
+  facebook: {
+    userScore: 623,
+    industryLeaderScore: 712,
+    percentageDiff: '-12%',
+    comparisonDirection: 'down',
+    description: 'Room for improvement vs industry leader',
+  },
+  x: {
+    userScore: 534,
+    industryLeaderScore: 678,
+    percentageDiff: '-21%',
+    comparisonDirection: 'down',
+    description: 'Below industry leader performance',
+  },
+  linkedin: {
+    userScore: 589,
+    industryLeaderScore: 634,
+    percentageDiff: '-7%',
+    comparisonDirection: 'down',
+    description: 'Close to industry leader benchmark',
+  },
+  snapchat: {
+    userScore: 398,
+    industryLeaderScore: 567,
+    percentageDiff: '-30%',
+    comparisonDirection: 'down',
+    description: 'Significant gap to industry leader',
+  },
+}
+
 export interface PlatformDetailPageProps {
   platform: PlatformConfig
 }
@@ -107,6 +168,7 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
   const { goBack } = useAppNavigation()
   const platformIcon = PLATFORM_ICONS[platform.id]
   const scoreData = PLATFORM_SCORE_DATA[platform.id]
+  const industryData = PLATFORM_INDUSTRY_DATA[platform.id]
 
   const handleSearch = (query: string) => {
     console.log('Search:', query)
@@ -157,8 +219,8 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
 
       {/* Main Content */}
       <div className="mt-8 flex flex-col gap-6">
-        {/* Score Card - centered with max width */}
-        <div className="mx-auto w-full max-w-md">
+        {/* Score Card and Industry Comparison - centered with max width */}
+        <div className="mx-auto flex w-full max-w-xl flex-col gap-4">
           <ScoreCard
             title={`Content Impact Score for ${platform.name}`}
             score={scoreData.score}
@@ -168,6 +230,13 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
             changeDirection={scoreData.changeDirection}
             titleSize="large"
             titleAlign="center"
+          />
+          <IndustryComparisonCard
+            userScore={industryData.userScore}
+            industryLeaderScore={industryData.industryLeaderScore}
+            percentageDiff={industryData.percentageDiff}
+            comparisonDirection={industryData.comparisonDirection}
+            description={industryData.description}
           />
         </div>
 
