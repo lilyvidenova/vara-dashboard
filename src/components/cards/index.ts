@@ -41,6 +41,7 @@ export {
   type GenderBreakdownCardProps,
   type GenderScoreData,
   type GenderStatus,
+  type PieSegmentData,
 } from './GenderBreakdownCard'
 export {
   LocationBreakdownCard,

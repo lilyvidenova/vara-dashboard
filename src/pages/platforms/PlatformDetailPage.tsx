@@ -23,7 +23,9 @@ import {
   ScoreCard,
   IndustryComparisonCard,
   StatCard,
+  GenderBreakdownCard,
   type OutcomeStatus,
+  type PieSegmentData,
 } from '@/components/cards'
 import {
   ContentImpactGrowthChart,
@@ -389,6 +391,72 @@ const PLATFORM_GROWTH_DATA: Record<PlatformId, {
   },
 }
 
+/**
+ * Platform gender breakdown data - would come from API in production
+ */
+const PLATFORM_GENDER_DATA: Record<PlatformId, {
+  title: string
+  subtitle: string
+  data: PieSegmentData[]
+}> = {
+  youtube: {
+    title: 'YouTube by Gender',
+    subtitle: 'Evaluate alignment to your target market',
+    data: [
+      { label: 'Men', value: 65, fill: '#0164a3' },
+      { label: 'Women', value: 35, fill: '#85c6db', badgeBg: '#f0f9fb', badgeBorder: '#85c6db', badgeText: '#3188a9' },
+    ],
+  },
+  tiktok: {
+    title: 'TikTok by Gender',
+    subtitle: 'Evaluate alignment to your target market',
+    data: [
+      { label: 'Men', value: 60, fill: '#0164a3' },
+      { label: 'Women', value: 40, fill: '#85c6db', badgeBg: '#f0f9fb', badgeBorder: '#85c6db', badgeText: '#3188a9' },
+    ],
+  },
+  instagram: {
+    title: 'Instagram by Gender',
+    subtitle: 'Evaluate alignment to your target market',
+    data: [
+      { label: 'Women', value: 58, fill: '#85c6db', badgeBg: '#f0f9fb', badgeBorder: '#85c6db', badgeText: '#3188a9' },
+      { label: 'Men', value: 42, fill: '#0164a3' },
+    ],
+  },
+  facebook: {
+    title: 'Facebook by Gender',
+    subtitle: 'Evaluate alignment to your target market',
+    data: [
+      { label: 'Men', value: 52, fill: '#0164a3' },
+      { label: 'Women', value: 48, fill: '#85c6db', badgeBg: '#f0f9fb', badgeBorder: '#85c6db', badgeText: '#3188a9' },
+    ],
+  },
+  x: {
+    title: 'X by Gender',
+    subtitle: 'Evaluate alignment to your target market',
+    data: [
+      { label: 'Men', value: 68, fill: '#0164a3' },
+      { label: 'Women', value: 32, fill: '#85c6db', badgeBg: '#f0f9fb', badgeBorder: '#85c6db', badgeText: '#3188a9' },
+    ],
+  },
+  linkedin: {
+    title: 'LinkedIn by Gender',
+    subtitle: 'Evaluate alignment to your target market',
+    data: [
+      { label: 'Men', value: 57, fill: '#0164a3' },
+      { label: 'Women', value: 43, fill: '#85c6db', badgeBg: '#f0f9fb', badgeBorder: '#85c6db', badgeText: '#3188a9' },
+    ],
+  },
+  snapchat: {
+    title: 'Snapchat by Gender',
+    subtitle: 'Evaluate alignment to your target market',
+    data: [
+      { label: 'Women', value: 55, fill: '#85c6db', badgeBg: '#f0f9fb', badgeBorder: '#85c6db', badgeText: '#3188a9' },
+      { label: 'Men', value: 45, fill: '#0164a3' },
+    ],
+  },
+}
+
 export interface PlatformDetailPageProps {
   platform: PlatformConfig
 }
@@ -407,6 +475,7 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
   const industryData = PLATFORM_INDUSTRY_DATA[platform.id]
   const statsData = PLATFORM_STATS_DATA[platform.id]
   const growthData = PLATFORM_GROWTH_DATA[platform.id]
+  const genderData = PLATFORM_GENDER_DATA[platform.id]
 
   const handleSearch = (query: string) => {
     console.log('Search:', query)
@@ -493,8 +562,8 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
         </div>
       </div>
 
-      {/* Growth Chart */}
-      <div className="mt-6">
+      {/* Growth Chart and Gender Breakdown */}
+      <div className="mt-6 flex flex-col gap-6 lg:flex-row">
         <ContentImpactGrowthChart
           title={growthData.title}
           description={growthData.description}
@@ -503,6 +572,14 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
           showYAxis={true}
           showSeparator={true}
           simpleTooltip={true}
+          className="lg:flex-1"
+        />
+        <GenderBreakdownCard
+          variant="pie"
+          title={genderData.title}
+          subtitle={genderData.subtitle}
+          data={genderData.data}
+          className="lg:w-auto lg:min-w-[360px]"
         />
       </div>
     </DashboardLayout>
