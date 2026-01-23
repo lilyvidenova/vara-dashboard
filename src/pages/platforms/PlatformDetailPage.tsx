@@ -24,8 +24,10 @@ import {
   IndustryComparisonCard,
   StatCard,
   GenderBreakdownCard,
+  AgeGroupBreakdownCard,
   type OutcomeStatus,
   type PieSegmentData,
+  type PercentageAgeGroupData,
 } from '@/components/cards'
 import {
   ContentImpactGrowthChart,
@@ -457,6 +459,100 @@ const PLATFORM_GENDER_DATA: Record<PlatformId, {
   },
 }
 
+/**
+ * Platform age group breakdown data - would come from API in production
+ */
+const PLATFORM_AGE_DATA: Record<PlatformId, {
+  title: string
+  subtitle: string
+  data: PercentageAgeGroupData[]
+}> = {
+  youtube: {
+    title: 'YouTube by Age Group',
+    subtitle: 'Identify high-performing and underperforming age segments',
+    data: [
+      { ageGroup: '18-24', percentage: 22 },
+      { ageGroup: '25-34', percentage: 28, isTarget: true },
+      { ageGroup: '35-44', percentage: 20, isTarget: true },
+      { ageGroup: '45-54', percentage: 15 },
+      { ageGroup: '55-64', percentage: 10 },
+      { ageGroup: '65+', percentage: 5 },
+    ],
+  },
+  tiktok: {
+    title: 'TikTok by Age Group',
+    subtitle: 'Identify high-performing and underperforming age segments',
+    data: [
+      { ageGroup: '18-24', percentage: 30 },
+      { ageGroup: '25-34', percentage: 25, isTarget: true },
+      { ageGroup: '35-44', percentage: 20, isTarget: true },
+      { ageGroup: '45-54', percentage: 15 },
+      { ageGroup: '55-64', percentage: 5 },
+      { ageGroup: '65+', percentage: 5 },
+    ],
+  },
+  instagram: {
+    title: 'Instagram by Age Group',
+    subtitle: 'Identify high-performing and underperforming age segments',
+    data: [
+      { ageGroup: '18-24', percentage: 28 },
+      { ageGroup: '25-34', percentage: 32, isTarget: true },
+      { ageGroup: '35-44', percentage: 18, isTarget: true },
+      { ageGroup: '45-54', percentage: 12 },
+      { ageGroup: '55-64', percentage: 6 },
+      { ageGroup: '65+', percentage: 4 },
+    ],
+  },
+  facebook: {
+    title: 'Facebook by Age Group',
+    subtitle: 'Identify high-performing and underperforming age segments',
+    data: [
+      { ageGroup: '18-24', percentage: 12 },
+      { ageGroup: '25-34', percentage: 24, isTarget: true },
+      { ageGroup: '35-44', percentage: 26, isTarget: true },
+      { ageGroup: '45-54', percentage: 20 },
+      { ageGroup: '55-64', percentage: 12 },
+      { ageGroup: '65+', percentage: 6 },
+    ],
+  },
+  x: {
+    title: 'X by Age Group',
+    subtitle: 'Identify high-performing and underperforming age segments',
+    data: [
+      { ageGroup: '18-24', percentage: 18 },
+      { ageGroup: '25-34', percentage: 30, isTarget: true },
+      { ageGroup: '35-44', percentage: 25, isTarget: true },
+      { ageGroup: '45-54', percentage: 15 },
+      { ageGroup: '55-64', percentage: 8 },
+      { ageGroup: '65+', percentage: 4 },
+    ],
+  },
+  linkedin: {
+    title: 'LinkedIn by Age Group',
+    subtitle: 'Identify high-performing and underperforming age segments',
+    data: [
+      { ageGroup: '18-24', percentage: 10 },
+      { ageGroup: '25-34', percentage: 35, isTarget: true },
+      { ageGroup: '35-44', percentage: 28, isTarget: true },
+      { ageGroup: '45-54', percentage: 18 },
+      { ageGroup: '55-64', percentage: 7 },
+      { ageGroup: '65+', percentage: 2 },
+    ],
+  },
+  snapchat: {
+    title: 'Snapchat by Age Group',
+    subtitle: 'Identify high-performing and underperforming age segments',
+    data: [
+      { ageGroup: '18-24', percentage: 42, isTarget: true },
+      { ageGroup: '25-34', percentage: 28, isTarget: true },
+      { ageGroup: '35-44', percentage: 15 },
+      { ageGroup: '45-54', percentage: 10 },
+      { ageGroup: '55-64', percentage: 3 },
+      { ageGroup: '65+', percentage: 2 },
+    ],
+  },
+}
+
 export interface PlatformDetailPageProps {
   platform: PlatformConfig
 }
@@ -476,6 +572,7 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
   const statsData = PLATFORM_STATS_DATA[platform.id]
   const growthData = PLATFORM_GROWTH_DATA[platform.id]
   const genderData = PLATFORM_GENDER_DATA[platform.id]
+  const ageData = PLATFORM_AGE_DATA[platform.id]
 
   const handleSearch = (query: string) => {
     console.log('Search:', query)
@@ -562,7 +659,7 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
         </div>
       </div>
 
-      {/* Growth Chart and Gender Breakdown */}
+      {/* Growth Chart, Gender Breakdown, and Age Group Breakdown */}
       <div className="mt-6 flex flex-col gap-6 lg:flex-row">
         <ContentImpactGrowthChart
           title={growthData.title}
@@ -579,7 +676,14 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
           title={genderData.title}
           subtitle={genderData.subtitle}
           data={genderData.data}
-          className="lg:w-auto lg:min-w-[360px]"
+          className="lg:w-auto lg:min-w-[300px]"
+        />
+        <AgeGroupBreakdownCard
+          variant="percentage"
+          title={ageData.title}
+          subtitle={ageData.subtitle}
+          data={ageData.data}
+          className="lg:w-auto lg:min-w-[380px]"
         />
       </div>
     </DashboardLayout>
