@@ -338,7 +338,7 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
         </div>
 
         {/* Platform Stats Grid */}
-        <div className="grid grid-cols-2 gap-6">
+        <div className="mx-auto grid w-full max-w-xl grid-cols-2 gap-6">
           {statsData.map((stat, index) => (
             <StatCard
               key={index}
