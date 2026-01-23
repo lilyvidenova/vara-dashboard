@@ -9,11 +9,22 @@ import {
   Twitter,
   Linkedin,
   Ghost,
+  Users,
+  Eye,
+  ShoppingBag,
+  Coins,
+  DollarSign,
+  CircleCheck,
 } from 'lucide-react'
 
 import { DashboardLayout } from '@/components/layout'
 import { PageHeader } from '@/components/layout/PageHeader'
-import { ScoreCard, IndustryComparisonCard, type OutcomeStatus } from '@/components/cards'
+import {
+  ScoreCard,
+  IndustryComparisonCard,
+  StatCard,
+  type OutcomeStatus,
+} from '@/components/cards'
 import { useAppNavigation } from '@/hooks/useAppNavigation'
 
 import type { PlatformConfig, PlatformId } from '@/types/platforms'
@@ -153,6 +164,91 @@ const PLATFORM_INDUSTRY_DATA: Record<PlatformId, {
   },
 }
 
+/**
+ * Stat card configuration for a single metric
+ */
+interface StatCardConfig {
+  icon: 'shares' | 'watchTime' | 'shopRevenue' | 'rpm' | 'revenue' | 'completion'
+  title: string
+  value: string
+  change?: { value: string; direction: 'up' | 'down' }
+  description: string
+}
+
+/**
+ * Platform-specific stat card data - would come from API in production
+ */
+const PLATFORM_STATS_DATA: Record<PlatformId, StatCardConfig[]> = {
+  youtube: [
+    { icon: 'shares', title: 'Subscribers', value: '2.4M', description: 'Total channel subscribers' },
+    { icon: 'watchTime', title: 'Average Watch Time', value: '8.2 mins', change: { value: '12%', direction: 'up' }, description: 'Average video watch duration' },
+    { icon: 'shopRevenue', title: 'Ad Revenue', value: '£45k', change: { value: '18%', direction: 'up' }, description: 'Revenue from YouTube ads' },
+    { icon: 'rpm', title: 'RPM', value: '£4.50', change: { value: '8%', direction: 'up' }, description: 'Revenue per 1,000 views' },
+    { icon: 'revenue', title: 'Overall Revenue', value: '£52k', description: 'Total revenue from YouTube' },
+    { icon: 'completion', title: 'Video Completion Rate', value: '68%', change: { value: '5%', direction: 'up' }, description: 'Viewers who watch to the end' },
+  ],
+  tiktok: [
+    { icon: 'shares', title: 'Shares', value: '563', description: 'Total video shares across all content' },
+    { icon: 'watchTime', title: 'Average Watch Time', value: '1.35 mins', change: { value: '86%', direction: 'up' }, description: 'Average video watch duration' },
+    { icon: 'shopRevenue', title: 'TikTok Shop Revenue', value: '£18k', change: { value: '5%', direction: 'down' }, description: 'Revenue from TikTok Shop sales' },
+    { icon: 'rpm', title: 'RPM', value: '£2,100', change: { value: '21%', direction: 'up' }, description: 'Revenue per 1,000 views' },
+    { icon: 'revenue', title: 'Overall Revenue', value: '£34k', description: 'Total revenue from TikTok' },
+    { icon: 'completion', title: 'Completion Rate', value: '1,235', change: { value: '5%', direction: 'down' }, description: 'Videos watched to completion' },
+  ],
+  instagram: [
+    { icon: 'shares', title: 'Followers', value: '856K', description: 'Total account followers' },
+    { icon: 'watchTime', title: 'Avg. Reel Watch Time', value: '0.45 mins', change: { value: '23%', direction: 'up' }, description: 'Average reel watch duration' },
+    { icon: 'shopRevenue', title: 'Shop Revenue', value: '£12k', change: { value: '15%', direction: 'up' }, description: 'Revenue from Instagram Shop' },
+    { icon: 'rpm', title: 'Engagement Rate', value: '4.2%', change: { value: '0.8%', direction: 'up' }, description: 'Likes and comments per follower' },
+    { icon: 'revenue', title: 'Overall Revenue', value: '£28k', description: 'Total revenue from Instagram' },
+    { icon: 'completion', title: 'Story Completion', value: '72%', change: { value: '3%', direction: 'up' }, description: 'Stories viewed to the end' },
+  ],
+  facebook: [
+    { icon: 'shares', title: 'Page Followers', value: '1.2M', description: 'Total page followers' },
+    { icon: 'watchTime', title: 'Video Watch Time', value: '3.2 mins', change: { value: '8%', direction: 'up' }, description: 'Average video watch duration' },
+    { icon: 'shopRevenue', title: 'Shop Revenue', value: '£8.5k', change: { value: '12%', direction: 'up' }, description: 'Revenue from Facebook Shop' },
+    { icon: 'rpm', title: 'Post Reach', value: '245K', change: { value: '15%', direction: 'up' }, description: 'Average reach per post' },
+    { icon: 'revenue', title: 'Overall Revenue', value: '£15k', description: 'Total revenue from Facebook' },
+    { icon: 'completion', title: 'Video Completion', value: '45%', change: { value: '2%', direction: 'down' }, description: 'Videos watched to completion' },
+  ],
+  x: [
+    { icon: 'shares', title: 'Followers', value: '523K', description: 'Total account followers' },
+    { icon: 'watchTime', title: 'Impressions', value: '2.1M', change: { value: '18%', direction: 'up' }, description: 'Total post impressions' },
+    { icon: 'shopRevenue', title: 'Link Clicks', value: '45.2K', change: { value: '7%', direction: 'down' }, description: 'Clicks on shared links' },
+    { icon: 'rpm', title: 'Engagement Rate', value: '2.8%', change: { value: '0.3%', direction: 'up' }, description: 'Engagements per impression' },
+    { icon: 'revenue', title: 'Referral Revenue', value: '£6.2k', description: 'Revenue from X referrals' },
+    { icon: 'completion', title: 'Video Views', value: '892K', change: { value: '25%', direction: 'up' }, description: 'Total video views' },
+  ],
+  linkedin: [
+    { icon: 'shares', title: 'Followers', value: '125K', description: 'Total company page followers' },
+    { icon: 'watchTime', title: 'Post Impressions', value: '456K', change: { value: '32%', direction: 'up' }, description: 'Total post impressions' },
+    { icon: 'shopRevenue', title: 'Lead Generation', value: '234', change: { value: '18%', direction: 'up' }, description: 'Leads generated via LinkedIn' },
+    { icon: 'rpm', title: 'Engagement Rate', value: '5.2%', change: { value: '1.2%', direction: 'up' }, description: 'Engagements per impression' },
+    { icon: 'revenue', title: 'B2B Revenue', value: '£42k', description: 'Revenue attributed to LinkedIn' },
+    { icon: 'completion', title: 'Article Reads', value: '12.4K', change: { value: '8%', direction: 'up' }, description: 'Full article reads' },
+  ],
+  snapchat: [
+    { icon: 'shares', title: 'Subscribers', value: '89K', description: 'Total Snapchat subscribers' },
+    { icon: 'watchTime', title: 'Story View Time', value: '0.28 mins', change: { value: '5%', direction: 'down' }, description: 'Average story view duration' },
+    { icon: 'shopRevenue', title: 'Spotlight Revenue', value: '£2.1k', change: { value: '45%', direction: 'up' }, description: 'Revenue from Spotlight' },
+    { icon: 'rpm', title: 'Story Completions', value: '42%', change: { value: '3%', direction: 'down' }, description: 'Stories viewed to completion' },
+    { icon: 'revenue', title: 'Overall Revenue', value: '£4.8k', description: 'Total revenue from Snapchat' },
+    { icon: 'completion', title: 'Snap Opens', value: '156K', change: { value: '12%', direction: 'up' }, description: 'Total snaps opened' },
+  ],
+}
+
+/**
+ * Icon mapping for stat cards
+ */
+const STAT_ICONS: Record<StatCardConfig['icon'], React.ReactNode> = {
+  shares: <Users className="h-full w-full" />,
+  watchTime: <Eye className="h-full w-full" />,
+  shopRevenue: <ShoppingBag className="h-full w-full" />,
+  rpm: <Coins className="h-full w-full" />,
+  revenue: <DollarSign className="h-full w-full" />,
+  completion: <CircleCheck className="h-full w-full" />,
+}
+
 export interface PlatformDetailPageProps {
   platform: PlatformConfig
 }
@@ -169,6 +265,7 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
   const platformIcon = PLATFORM_ICONS[platform.id]
   const scoreData = PLATFORM_SCORE_DATA[platform.id]
   const industryData = PLATFORM_INDUSTRY_DATA[platform.id]
+  const statsData = PLATFORM_STATS_DATA[platform.id]
 
   const handleSearch = (query: string) => {
     console.log('Search:', query)
@@ -240,8 +337,19 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
           />
         </div>
 
-        {/* Placeholder for additional content sections */}
-        {/* TODO: Add more platform-specific cards and metrics as designs are provided */}
+        {/* Platform Stats Grid */}
+        <div className="grid grid-cols-2 gap-6">
+          {statsData.map((stat, index) => (
+            <StatCard
+              key={index}
+              icon={STAT_ICONS[stat.icon]}
+              title={stat.title}
+              value={stat.value}
+              change={stat.change}
+              description={stat.description}
+            />
+          ))}
+        </div>
       </div>
     </DashboardLayout>
   )
