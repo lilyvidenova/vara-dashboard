@@ -25,9 +25,12 @@ import {
   StatCard,
   GenderBreakdownCard,
   AgeGroupBreakdownCard,
+  LocationBreakdownCard,
   type OutcomeStatus,
   type PieSegmentData,
   type PercentageAgeGroupData,
+  type ViewsLocationData,
+  type LocationAlert,
 } from '@/components/cards'
 import {
   ContentImpactGrowthChart,
@@ -553,6 +556,133 @@ const PLATFORM_AGE_DATA: Record<PlatformId, {
   },
 }
 
+/**
+ * Platform location breakdown data - would come from API in production
+ */
+const PLATFORM_LOCATION_DATA: Record<PlatformId, {
+  title: string
+  subtitle: string
+  metricLabel: string
+  data: ViewsLocationData[]
+  alerts: LocationAlert[]
+}> = {
+  youtube: {
+    title: 'YouTube Views By Location',
+    subtitle: 'YouTube viewers distributed throughout the globe',
+    metricLabel: 'Views',
+    data: [
+      { rank: 1, country: 'USA', countryCode: 'us', value: 1250000, isTarget: true },
+      { rank: 2, country: 'United Kingdom', countryCode: 'gb', value: 425000, isTarget: true },
+      { rank: 3, country: 'Germany', countryCode: 'de', value: 312000 },
+      { rank: 4, country: 'Canada', countryCode: 'ca', value: 198000 },
+      { rank: 5, country: 'Australia', countryCode: 'au', value: 156000, isTarget: true },
+      { rank: 6, country: 'India', countryCode: 'in', value: 89000 },
+    ],
+    alerts: [
+      { type: 'info', message: '52% from the US -', highlightedText: 'strong concentration' },
+    ],
+  },
+  tiktok: {
+    title: 'TikTok Views By Location',
+    subtitle: 'TikTok viewers distributed throughout the globe',
+    metricLabel: 'Views',
+    data: [
+      { rank: 1, country: 'USA', countryCode: 'us', value: 193546, isTarget: true },
+      { rank: 2, country: 'Germany', countryCode: 'de', value: 78546, isTarget: true },
+      { rank: 3, country: 'Japan', countryCode: 'jp', value: 15546 },
+      { rank: 4, country: 'United Kingdom', countryCode: 'gb', value: 9234 },
+      { rank: 5, country: 'India', countryCode: 'in', value: 1001, isTarget: true, hasWarning: true },
+      { rank: 6, country: 'Australia', countryCode: 'au', value: 453 },
+    ],
+    alerts: [
+      { type: 'error', message: 'India not in the top 3 -', highlightedText: 'review strategy' },
+      { type: 'info', message: '65% from the US -', highlightedText: 'highly concentrated' },
+    ],
+  },
+  instagram: {
+    title: 'Instagram Followers By Location',
+    subtitle: 'Instagram followers distributed throughout the globe',
+    metricLabel: 'Followers',
+    data: [
+      { rank: 1, country: 'USA', countryCode: 'us', value: 342000, isTarget: true },
+      { rank: 2, country: 'United Kingdom', countryCode: 'gb', value: 156000, isTarget: true },
+      { rank: 3, country: 'Brazil', countryCode: 'br', value: 98000 },
+      { rank: 4, country: 'Germany', countryCode: 'de', value: 67000 },
+      { rank: 5, country: 'France', countryCode: 'fr', value: 45000, isTarget: true },
+      { rank: 6, country: 'Mexico', countryCode: 'mx', value: 32000 },
+    ],
+    alerts: [
+      { type: 'info', message: '40% from the US -', highlightedText: 'well distributed' },
+    ],
+  },
+  facebook: {
+    title: 'Facebook Followers By Location',
+    subtitle: 'Facebook followers distributed throughout the globe',
+    metricLabel: 'Followers',
+    data: [
+      { rank: 1, country: 'USA', countryCode: 'us', value: 456000, isTarget: true },
+      { rank: 2, country: 'India', countryCode: 'in', value: 234000, isTarget: true },
+      { rank: 3, country: 'Brazil', countryCode: 'br', value: 189000 },
+      { rank: 4, country: 'Mexico', countryCode: 'mx', value: 98000 },
+      { rank: 5, country: 'United Kingdom', countryCode: 'gb', value: 67000 },
+      { rank: 6, country: 'Philippines', countryCode: 'ph', value: 45000 },
+    ],
+    alerts: [
+      { type: 'info', message: '38% from the US -', highlightedText: 'diverse audience' },
+    ],
+  },
+  x: {
+    title: 'X Followers By Location',
+    subtitle: 'X followers distributed throughout the globe',
+    metricLabel: 'Followers',
+    data: [
+      { rank: 1, country: 'USA', countryCode: 'us', value: 287000, isTarget: true },
+      { rank: 2, country: 'United Kingdom', countryCode: 'gb', value: 89000, isTarget: true },
+      { rank: 3, country: 'Japan', countryCode: 'jp', value: 56000 },
+      { rank: 4, country: 'Canada', countryCode: 'ca', value: 34000 },
+      { rank: 5, country: 'Germany', countryCode: 'de', value: 23000, isTarget: true, hasWarning: true },
+      { rank: 6, country: 'France', countryCode: 'fr', value: 18000 },
+    ],
+    alerts: [
+      { type: 'error', message: 'Germany not in the top 3 -', highlightedText: 'review targeting' },
+      { type: 'info', message: '55% from the US -', highlightedText: 'moderately concentrated' },
+    ],
+  },
+  linkedin: {
+    title: 'LinkedIn Followers By Location',
+    subtitle: 'LinkedIn followers distributed throughout the globe',
+    metricLabel: 'Followers',
+    data: [
+      { rank: 1, country: 'USA', countryCode: 'us', value: 52000, isTarget: true },
+      { rank: 2, country: 'United Kingdom', countryCode: 'gb', value: 23000, isTarget: true },
+      { rank: 3, country: 'Germany', countryCode: 'de', value: 15000, isTarget: true },
+      { rank: 4, country: 'Canada', countryCode: 'ca', value: 12000 },
+      { rank: 5, country: 'Australia', countryCode: 'au', value: 8000 },
+      { rank: 6, country: 'France', countryCode: 'fr', value: 6500 },
+    ],
+    alerts: [
+      { type: 'info', message: 'All targets in top 3 -', highlightedText: 'excellent performance' },
+    ],
+  },
+  snapchat: {
+    title: 'Snapchat Subscribers By Location',
+    subtitle: 'Snapchat subscribers distributed throughout the globe',
+    metricLabel: 'Subscribers',
+    data: [
+      { rank: 1, country: 'USA', countryCode: 'us', value: 45000, isTarget: true },
+      { rank: 2, country: 'United Kingdom', countryCode: 'gb', value: 18000, isTarget: true },
+      { rank: 3, country: 'France', countryCode: 'fr', value: 8500 },
+      { rank: 4, country: 'Germany', countryCode: 'de', value: 6200, isTarget: true, hasWarning: true },
+      { rank: 5, country: 'Canada', countryCode: 'ca', value: 4800 },
+      { rank: 6, country: 'Australia', countryCode: 'au', value: 3200 },
+    ],
+    alerts: [
+      { type: 'error', message: 'Germany not in the top 3 -', highlightedText: 'needs attention' },
+      { type: 'info', message: '51% from the US -', highlightedText: 'highly concentrated' },
+    ],
+  },
+}
+
 export interface PlatformDetailPageProps {
   platform: PlatformConfig
 }
@@ -573,6 +703,7 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
   const growthData = PLATFORM_GROWTH_DATA[platform.id]
   const genderData = PLATFORM_GENDER_DATA[platform.id]
   const ageData = PLATFORM_AGE_DATA[platform.id]
+  const locationData = PLATFORM_LOCATION_DATA[platform.id]
 
   const handleSearch = (query: string) => {
     console.log('Search:', query)
@@ -684,6 +815,18 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
           subtitle={ageData.subtitle}
           data={ageData.data}
           className="lg:w-auto lg:min-w-[380px]"
+        />
+      </div>
+
+      {/* Location Breakdown */}
+      <div className="mt-6">
+        <LocationBreakdownCard
+          variant="views"
+          title={locationData.title}
+          subtitle={locationData.subtitle}
+          data={locationData.data}
+          metricLabel={locationData.metricLabel}
+          alerts={locationData.alerts}
         />
       </div>
     </DashboardLayout>

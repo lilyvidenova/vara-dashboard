@@ -49,6 +49,8 @@ export {
   type LocationBreakdownCardProps,
   type LocationData,
   type LocationStatus,
+  type ViewsLocationData,
+  type LocationAlert,
 } from './LocationBreakdownCard'
 export {
   PlatformScoreCard,
