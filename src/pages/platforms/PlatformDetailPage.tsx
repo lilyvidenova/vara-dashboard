@@ -1271,7 +1271,7 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
       />
 
       {/* Main Content */}
-      <div className="mt-8 flex flex-col gap-6 lg:flex-row lg:items-start">
+      <div className="mt-8 flex flex-col gap-6 lg:flex-row lg:items-stretch">
         {/* Score Card and Industry Comparison */}
         <div className="flex w-full flex-col gap-4 lg:w-1/2">
           <ScoreCard
@@ -1290,6 +1290,7 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
             percentageDiff={industryData.percentageDiff}
             comparisonDirection={industryData.comparisonDirection}
             description={industryData.description}
+            className="flex-1"
           />
         </div>
 

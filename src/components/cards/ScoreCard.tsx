@@ -99,7 +99,7 @@ export function ScoreCard({
           <OutcomeGauge status={status} />
 
           {/* Score, Badge, and Change - positioned over gauge */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center pt-[30px]">
+          <div className="absolute inset-0 flex flex-col items-center justify-center pt-[42px]">
             <p className="text-5xl font-bold leading-[48px] text-foreground">
               {score}
             </p>

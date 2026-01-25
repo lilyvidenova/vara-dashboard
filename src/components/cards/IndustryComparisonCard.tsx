@@ -29,8 +29,12 @@ export function IndustryComparisonCard({
   const ArrowIcon = isUp ? ArrowUpRight : ArrowDownRight
 
   // Calculate tooltip positions as percentages
-  const userScorePercent = (userScore / maxScore) * 100
-  const industryLeaderPercent = (industryLeaderScore / maxScore) * 100
+  // Align with BarcodeBar's discrete 19-column grid for accurate positioning
+  const TOTAL_COLUMNS = 19
+  const userScoreColumns = Math.round((userScore / maxScore) * TOTAL_COLUMNS)
+  const userScorePercent = (userScoreColumns / TOTAL_COLUMNS) * 100
+  const industryLeaderColumns = Math.round((industryLeaderScore / maxScore) * TOTAL_COLUMNS)
+  const industryLeaderPercent = (industryLeaderColumns / TOTAL_COLUMNS) * 100
 
   return (
     <BaseCard
@@ -74,18 +78,35 @@ export function IndustryComparisonCard({
         </div>
 
         {/* Bar Chart Section */}
-        <div className="flex flex-col gap-2">
-          {/* Your Score Tooltip */}
-          <div
-            className="flex justify-start"
-            style={{ paddingLeft: `${userScorePercent - 8}%` }}
-          >
-            <ScoreTooltip
-              label="Your Score"
-              score={userScore}
-              variant="primary"
-              position="above"
-            />
+        <div className="flex flex-col">
+          {/* Your Score Tooltip - aligned with bar */}
+          <div className="flex items-end gap-1">
+            {/* Spacer matching left scale */}
+            <div className="flex items-center gap-1">
+              <span className="invisible text-xs font-bold">0</span>
+              <div className="w-px" />
+            </div>
+
+            {/* Tooltip container - matches bar width */}
+            <div className="relative flex-1 h-0">
+              <div
+                className="absolute bottom-0 -translate-x-1/2"
+                style={{ left: `${userScorePercent}%` }}
+              >
+                <ScoreTooltip
+                  label="Your Score"
+                  score={userScore}
+                  variant="primary"
+                  position="above"
+                />
+              </div>
+            </div>
+
+            {/* Spacer matching right scale */}
+            <div className="flex items-center gap-1">
+              <div className="w-px" />
+              <span className="invisible text-xs font-bold">{maxScore}</span>
+            </div>
           </div>
 
           {/* Scale row with bar */}
@@ -97,7 +118,7 @@ export function IndustryComparisonCard({
             </div>
 
             {/* Barcode bar */}
-            <BarcodeBar className="flex-1" />
+            <BarcodeBar fillPercentage={userScore / maxScore} className="flex-1" />
 
             {/* Right scale */}
             <div className="flex items-center gap-1">
@@ -108,17 +129,34 @@ export function IndustryComparisonCard({
             </div>
           </div>
 
-          {/* Industry Leader Tooltip */}
-          <div
-            className="flex justify-start"
-            style={{ paddingLeft: `${industryLeaderPercent - 10}%` }}
-          >
-            <ScoreTooltip
-              label="Industry Leader"
-              score={industryLeaderScore}
-              variant="secondary"
-              position="below"
-            />
+          {/* Industry Leader Tooltip - aligned with bar */}
+          <div className="flex items-start gap-1">
+            {/* Spacer matching left scale */}
+            <div className="flex items-center gap-1">
+              <span className="invisible text-xs font-bold">0</span>
+              <div className="w-px" />
+            </div>
+
+            {/* Tooltip container - matches bar width */}
+            <div className="relative flex-1 h-0">
+              <div
+                className="absolute top-0 -translate-x-1/2"
+                style={{ left: `${industryLeaderPercent}%` }}
+              >
+                <ScoreTooltip
+                  label="Industry Leader"
+                  score={industryLeaderScore}
+                  variant="secondary"
+                  position="below"
+                />
+              </div>
+            </div>
+
+            {/* Spacer matching right scale */}
+            <div className="flex items-center gap-1">
+              <div className="w-px" />
+              <span className="invisible text-xs font-bold">{maxScore}</span>
+            </div>
           </div>
         </div>
       </div>

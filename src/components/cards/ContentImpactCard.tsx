@@ -2,12 +2,26 @@ import { cn } from '@/lib/utils'
 import { BaseCard } from './BaseCard'
 import { StatusBadge } from './StatusBadge'
 import { ChangeIndicator } from './ChangeIndicator'
-import { ImpactGauge } from './ImpactGauge'
+import { OutcomeGauge, type OutcomeStatus } from './OutcomeGauge'
+
+/**
+ * Derives OutcomeStatus from a numeric score (0-1000 scale).
+ * Used when status is not explicitly provided.
+ */
+function getStatusFromScore(score: number): OutcomeStatus {
+  if (score >= 800) return 'exceptional'
+  if (score >= 650) return 'strong'
+  if (score >= 450) return 'healthy'
+  if (score >= 300) return 'at-risk'
+  return 'underperforming'
+}
 
 export interface ContentImpactCardProps {
   title?: string
   subtitle?: string
   score: number
+  /** Status for gauge coloring. If not provided, will be calculated from score. */
+  status?: OutcomeStatus
   statusLabel: string
   changeValue: string
   changeDirection: 'up' | 'down'
@@ -18,11 +32,15 @@ export function ContentImpactCard({
   title = 'Vara Content Impact Score',
   subtitle = 'Overall Performance Across Platforms & Content',
   score,
+  status,
   statusLabel,
   changeValue,
   changeDirection,
   className,
 }: ContentImpactCardProps) {
+  // Use provided status or calculate from score
+  const computedStatus = status ?? getStatusFromScore(score)
+
   return (
     <BaseCard
       variant="bordered"
@@ -42,7 +60,7 @@ export function ContentImpactCard({
 
         {/* Gauge Section */}
         <div className="relative flex flex-col items-center">
-          <ImpactGauge />
+          <OutcomeGauge status={computedStatus} />
 
           {/* Score and Badge - positioned over gauge */}
           <div className="absolute inset-0 flex flex-col items-center justify-center pt-4">

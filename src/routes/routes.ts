@@ -19,6 +19,13 @@ export const ROUTES = {
     AUDIENCE_SATISFACTION: '/outcomes/audience-satisfaction',
     AUDIENCE_LOYALTY: '/outcomes/audience-loyalty',
   },
+  PLATFORM_OUTCOMES: {
+    BRAND_AWARENESS: '/platforms/:platformId/brand-awareness',
+    ENGAGEMENT: '/platforms/:platformId/engagement',
+    TARGETING: '/platforms/:platformId/targeting',
+    AUDIENCE_SATISFACTION: '/platforms/:platformId/audience-satisfaction',
+    AUDIENCE_LOYALTY: '/platforms/:platformId/audience-loyalty',
+  },
 } as const
 
 // Helper to generate platform URLs
@@ -28,3 +35,14 @@ export const getPlatformUrl = (platformId: string): string =>
 // Helper to generate outcome URLs
 export const getOutcomeUrl = (outcomeId: string): string =>
   `${ROUTES.OUTCOMES.ROOT}/${outcomeId}`
+
+// Helper to generate platform-specific outcome URLs
+export type PlatformOutcomeType =
+  | 'brand-awareness'
+  | 'engagement'
+  | 'targeting'
+  | 'audience-satisfaction'
+  | 'audience-loyalty'
+
+export const getPlatformOutcomeUrl = (platformId: string, outcomeType: PlatformOutcomeType): string =>
+  `${ROUTES.PLATFORMS.ROOT}/${platformId}/${outcomeType}`
