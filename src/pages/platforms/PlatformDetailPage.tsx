@@ -15,6 +15,13 @@ import {
   Coins,
   DollarSign,
   CircleCheck,
+  Radio,
+  Sparkles,
+  Target,
+  Repeat,
+  CircleDollarSign,
+  Zap,
+  TrendingUp,
 } from 'lucide-react'
 
 import { DashboardLayout } from '@/components/layout'
@@ -26,12 +33,22 @@ import {
   GenderBreakdownCard,
   AgeGroupBreakdownCard,
   LocationBreakdownCard,
+  MetricsCardReusable,
   type OutcomeStatus,
   type PieSegmentData,
   type PercentageAgeGroupData,
   type ViewsLocationData,
   type LocationAlert,
 } from '@/components/cards'
+import {
+  OtherBusinessOutcomesSection,
+  AIHotTipsSection,
+  ContentPerformanceSection,
+  SectionHeader,
+  type BusinessOutcome,
+  type AITip,
+  type ContentItem,
+} from '@/components/sections'
 import {
   ContentImpactGrowthChart,
   type ChartDataPoint,
@@ -683,6 +700,479 @@ const PLATFORM_LOCATION_DATA: Record<PlatformId, {
   },
 }
 
+/**
+ * Business outcome data structure for selected outcomes (matches MetricsCardReusable)
+ */
+interface BusinessOutcomeData {
+  score: number
+  statusLabel: string
+  changeDirection: 'up' | 'down'
+  changeValue: string
+  stats: {
+    efficiency: { value: number | string; unit?: string }
+    growth: { value: string }
+  }
+}
+
+/**
+ * Platform-specific business outcomes data - would come from API in production
+ * Data structure matches MetricsCardReusable component props
+ */
+const PLATFORM_BUSINESS_OUTCOMES: Record<PlatformId, {
+  brandAwareness: BusinessOutcomeData
+  engagement: BusinessOutcomeData
+  targeting: BusinessOutcomeData
+}> = {
+  youtube: {
+    brandAwareness: {
+      score: 756,
+      statusLabel: 'Strong',
+      changeDirection: 'up',
+      changeValue: '18%',
+      stats: { efficiency: { value: 234, unit: '/post' }, growth: { value: '+ 54%' } },
+    },
+    engagement: {
+      score: 564,
+      statusLabel: 'Healthy',
+      changeDirection: 'up',
+      changeValue: '12%',
+      stats: { efficiency: { value: 189, unit: '/post' }, growth: { value: '+ 32%' } },
+    },
+    targeting: {
+      score: 312,
+      statusLabel: 'Underperforming',
+      changeDirection: 'down',
+      changeValue: '8%',
+      stats: { efficiency: { value: 98, unit: '/post' }, growth: { value: '- 12%' } },
+    },
+  },
+  tiktok: {
+    brandAwareness: {
+      score: 645,
+      statusLabel: 'Healthy',
+      changeDirection: 'up',
+      changeValue: '22%',
+      stats: { efficiency: { value: 312, unit: '/post' }, growth: { value: '+ 67%' } },
+    },
+    engagement: {
+      score: 789,
+      statusLabel: 'Strong',
+      changeDirection: 'up',
+      changeValue: '35%',
+      stats: { efficiency: { value: 456, unit: '/post' }, growth: { value: '+ 89%' } },
+    },
+    targeting: {
+      score: 423,
+      statusLabel: 'Healthy',
+      changeDirection: 'up',
+      changeValue: '5%',
+      stats: { efficiency: { value: 167, unit: '/post' }, growth: { value: '+ 15%' } },
+    },
+  },
+  instagram: {
+    brandAwareness: {
+      score: 698,
+      statusLabel: 'Healthy',
+      changeDirection: 'up',
+      changeValue: '15%',
+      stats: { efficiency: { value: 267, unit: '/post' }, growth: { value: '+ 42%' } },
+    },
+    engagement: {
+      score: 834,
+      statusLabel: 'Strong',
+      changeDirection: 'up',
+      changeValue: '28%',
+      stats: { efficiency: { value: 398, unit: '/post' }, growth: { value: '+ 56%' } },
+    },
+    targeting: {
+      score: 567,
+      statusLabel: 'Healthy',
+      changeDirection: 'up',
+      changeValue: '10%',
+      stats: { efficiency: { value: 203, unit: '/post' }, growth: { value: '+ 23%' } },
+    },
+  },
+  facebook: {
+    brandAwareness: {
+      score: 534,
+      statusLabel: 'Healthy',
+      changeDirection: 'up',
+      changeValue: '8%',
+      stats: { efficiency: { value: 178, unit: '/post' }, growth: { value: '+ 18%' } },
+    },
+    engagement: {
+      score: 456,
+      statusLabel: 'Healthy',
+      changeDirection: 'down',
+      changeValue: '3%',
+      stats: { efficiency: { value: 145, unit: '/post' }, growth: { value: '+ 5%' } },
+    },
+    targeting: {
+      score: 623,
+      statusLabel: 'Healthy',
+      changeDirection: 'up',
+      changeValue: '12%',
+      stats: { efficiency: { value: 234, unit: '/post' }, growth: { value: '+ 28%' } },
+    },
+  },
+  x: {
+    brandAwareness: {
+      score: 478,
+      statusLabel: 'Healthy',
+      changeDirection: 'up',
+      changeValue: '6%',
+      stats: { efficiency: { value: 156, unit: '/post' }, growth: { value: '+ 12%' } },
+    },
+    engagement: {
+      score: 534,
+      statusLabel: 'Healthy',
+      changeDirection: 'up',
+      changeValue: '9%',
+      stats: { efficiency: { value: 189, unit: '/post' }, growth: { value: '+ 21%' } },
+    },
+    targeting: {
+      score: 345,
+      statusLabel: 'Underperforming',
+      changeDirection: 'down',
+      changeValue: '5%',
+      stats: { efficiency: { value: 112, unit: '/post' }, growth: { value: '- 8%' } },
+    },
+  },
+  linkedin: {
+    brandAwareness: {
+      score: 712,
+      statusLabel: 'Strong',
+      changeDirection: 'up',
+      changeValue: '20%',
+      stats: { efficiency: { value: 289, unit: '/post' }, growth: { value: '+ 45%' } },
+    },
+    engagement: {
+      score: 498,
+      statusLabel: 'Healthy',
+      changeDirection: 'up',
+      changeValue: '7%',
+      stats: { efficiency: { value: 167, unit: '/post' }, growth: { value: '+ 16%' } },
+    },
+    targeting: {
+      score: 856,
+      statusLabel: 'Strong',
+      changeDirection: 'up',
+      changeValue: '25%',
+      stats: { efficiency: { value: 378, unit: '/post' }, growth: { value: '+ 52%' } },
+    },
+  },
+  snapchat: {
+    brandAwareness: {
+      score: 389,
+      statusLabel: 'Underperforming',
+      changeDirection: 'down',
+      changeValue: '12%',
+      stats: { efficiency: { value: 89, unit: '/post' }, growth: { value: '- 18%' } },
+    },
+    engagement: {
+      score: 512,
+      statusLabel: 'Healthy',
+      changeDirection: 'up',
+      changeValue: '8%',
+      stats: { efficiency: { value: 178, unit: '/post' }, growth: { value: '+ 22%' } },
+    },
+    targeting: {
+      score: 445,
+      statusLabel: 'Healthy',
+      changeDirection: 'up',
+      changeValue: '3%',
+      stats: { efficiency: { value: 145, unit: '/post' }, growth: { value: '+ 8%' } },
+    },
+  },
+}
+
+/**
+ * Platform-specific other business outcomes - would come from API in production
+ * Data structure matches OtherBusinessOutcomesSection component props (BusinessOutcome[])
+ */
+type OutcomeSectionStatus = 'exceptional' | 'strong' | 'healthy' | 'at-risk' | 'underperforming'
+
+interface OtherOutcomeData {
+  score: number
+  status: OutcomeSectionStatus
+  growth: string
+  growthDirection: 'up' | 'down'
+}
+
+const PLATFORM_OTHER_OUTCOMES: Record<PlatformId, {
+  audienceSatisfaction: OtherOutcomeData
+  audienceLoyalty: OtherOutcomeData
+}> = {
+  youtube: {
+    audienceSatisfaction: { score: 823, status: 'exceptional', growth: '+ 15%', growthDirection: 'up' },
+    audienceLoyalty: { score: 756, status: 'strong', growth: '+ 12%', growthDirection: 'up' },
+  },
+  tiktok: {
+    audienceSatisfaction: { score: 567, status: 'healthy', growth: '+ 8%', growthDirection: 'up' },
+    audienceLoyalty: { score: 423, status: 'at-risk', growth: '- 5%', growthDirection: 'down' },
+  },
+  instagram: {
+    audienceSatisfaction: { score: 745, status: 'strong', growth: '+ 18%', growthDirection: 'up' },
+    audienceLoyalty: { score: 689, status: 'healthy', growth: '+ 10%', growthDirection: 'up' },
+  },
+  facebook: {
+    audienceSatisfaction: { score: 512, status: 'healthy', growth: '+ 4%', growthDirection: 'up' },
+    audienceLoyalty: { score: 634, status: 'healthy', growth: '+ 7%', growthDirection: 'up' },
+  },
+  x: {
+    audienceSatisfaction: { score: 478, status: 'at-risk', growth: '- 3%', growthDirection: 'down' },
+    audienceLoyalty: { score: 534, status: 'healthy', growth: '+ 5%', growthDirection: 'up' },
+  },
+  linkedin: {
+    audienceSatisfaction: { score: 789, status: 'strong', growth: '+ 22%', growthDirection: 'up' },
+    audienceLoyalty: { score: 712, status: 'strong', growth: '+ 15%', growthDirection: 'up' },
+  },
+  snapchat: {
+    audienceSatisfaction: { score: 398, status: 'at-risk', growth: '- 8%', growthDirection: 'down' },
+    audienceLoyalty: { score: 356, status: 'at-risk', growth: '- 12%', growthDirection: 'down' },
+  },
+}
+
+/**
+ * Platform-specific AI hot tips - would come from API in production
+ * Data structure matches AIHotTipsSection component props
+ */
+const PLATFORM_AI_TIPS: Record<PlatformId, AITip[]> = {
+  youtube: [
+    {
+      id: 'yt-pacing',
+      title: 'Experiment with Faster Pacing',
+      riskLevel: 'high',
+      bullets: [
+        { text: 'Your average words-per-minute is lower than top performers', variant: 'muted' },
+        { text: 'Slightly faster delivery can improve retention.', variant: 'default' },
+      ],
+    },
+    {
+      id: 'yt-chapters',
+      title: 'Add Chapters to your videos',
+      riskLevel: 'low',
+      bullets: [
+        { text: 'Videos over 8 minutes perform better with chapters', variant: 'muted' },
+        { text: 'Break your content into sections to improve user experience', variant: 'default' },
+      ],
+    },
+  ],
+  tiktok: [
+    {
+      id: 'tt-frequency',
+      title: 'Increase Posting Frequency',
+      riskLevel: 'high',
+      bullets: [
+        { text: 'Top performers post 3-5 times daily on TikTok', variant: 'muted' },
+        { text: 'Your current frequency is below optimal engagement threshold.', variant: 'default' },
+      ],
+    },
+    {
+      id: 'tt-audio',
+      title: 'Use Trending Audio',
+      riskLevel: 'low',
+      bullets: [
+        { text: 'Videos with trending sounds get 2.5x more reach', variant: 'muted' },
+        { text: 'Update audio choices weekly to stay relevant', variant: 'default' },
+      ],
+    },
+  ],
+  instagram: [
+    {
+      id: 'ig-timing',
+      title: 'Optimize Posting Times',
+      riskLevel: 'low',
+      bullets: [
+        { text: 'Your audience is most active between 6-9 PM', variant: 'muted' },
+        { text: 'Shift posting schedule to maximize engagement', variant: 'default' },
+      ],
+    },
+    {
+      id: 'ig-reels',
+      title: 'Improve Reel Quality',
+      riskLevel: 'high',
+      bullets: [
+        { text: 'Reel completion rate is 15% below benchmark', variant: 'muted' },
+        { text: 'Focus on stronger hooks in the first 3 seconds', variant: 'default' },
+      ],
+    },
+  ],
+  facebook: [
+    {
+      id: 'fb-groups',
+      title: 'Leverage Facebook Groups',
+      riskLevel: 'low',
+      bullets: [
+        { text: 'Group posts get 3x more organic reach', variant: 'muted' },
+        { text: 'Create or join niche communities for better engagement', variant: 'default' },
+      ],
+    },
+    {
+      id: 'fb-reach',
+      title: 'Address Declining Reach',
+      riskLevel: 'high',
+      bullets: [
+        { text: 'Organic reach has dropped 20% this quarter', variant: 'muted' },
+        { text: 'Consider boosting high-performing posts', variant: 'default' },
+      ],
+    },
+  ],
+  x: [
+    {
+      id: 'x-threads',
+      title: 'Increase Thread Usage',
+      riskLevel: 'high',
+      bullets: [
+        { text: 'Threads get 5x more engagement than single posts', variant: 'muted' },
+        { text: 'Break down longer content into engaging threads', variant: 'default' },
+      ],
+    },
+    {
+      id: 'x-hashtags',
+      title: 'Optimize Hashtag Strategy',
+      riskLevel: 'low',
+      bullets: [
+        { text: 'Use 2-3 relevant hashtags per post maximum', variant: 'muted' },
+        { text: 'Research trending topics in your niche', variant: 'default' },
+      ],
+    },
+  ],
+  linkedin: [
+    {
+      id: 'li-native',
+      title: 'Post More Native Content',
+      riskLevel: 'low',
+      bullets: [
+        { text: 'Native LinkedIn content gets 10x more reach than links', variant: 'muted' },
+        { text: 'Share insights and stories directly on the platform', variant: 'default' },
+      ],
+    },
+    {
+      id: 'li-comments',
+      title: 'Engage with Comments',
+      riskLevel: 'low',
+      bullets: [
+        { text: 'Replying to comments boosts post visibility significantly', variant: 'muted' },
+        { text: 'Aim to respond within the first hour of posting', variant: 'default' },
+      ],
+    },
+  ],
+  snapchat: [
+    {
+      id: 'sc-retention',
+      title: 'Improve Story Retention',
+      riskLevel: 'high',
+      bullets: [
+        { text: 'Story completion rate is significantly below average', variant: 'muted' },
+        { text: 'Make stories more interactive with polls and questions', variant: 'default' },
+      ],
+    },
+    {
+      id: 'sc-ar',
+      title: 'Increase AR Lens Usage',
+      riskLevel: 'high',
+      bullets: [
+        { text: 'AR content drives higher engagement on Snapchat', variant: 'muted' },
+        { text: 'Create branded lenses to boost brand awareness', variant: 'default' },
+      ],
+    },
+  ],
+}
+
+/**
+ * Platform-specific top and worst performing content - would come from API in production
+ */
+const PLATFORM_CONTENT_DATA: Record<PlatformId, {
+  topItems: ContentItem[]
+  worstItems: ContentItem[]
+}> = {
+  youtube: {
+    topItems: [
+      { id: 'yt-1', rank: 1, thumbnail: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&h=108&fit=crop', platform: 'youtube', title: 'Behind the Scenes', artist: 'Studio Sessions', dateUploaded: '15 Jul, 2025', score: 892, status: 'exceptional' },
+      { id: 'yt-2', rank: 2, thumbnail: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=108&fit=crop', platform: 'youtube', title: 'Music Production Tips', artist: 'Producer Masterclass', dateUploaded: '8 Jul, 2025', score: 845, status: 'exceptional' },
+      { id: 'yt-3', rank: 3, thumbnail: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=200&h=108&fit=crop', platform: 'youtube', title: 'Live Concert Highlights', artist: 'Summer Tour 2025', dateUploaded: '1 Jul, 2025', score: 798, status: 'strong' },
+    ],
+    worstItems: [
+      { id: 'yt-8', rank: 8, thumbnail: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=200&h=108&fit=crop', platform: 'youtube', title: 'Q&A Session', artist: 'Fan Questions', dateUploaded: '20 Jun, 2025', score: 412, status: 'at-risk' },
+      { id: 'yt-9', rank: 9, thumbnail: 'https://images.unsplash.com/photo-1501612780327-45045538702b?w=200&h=108&fit=crop', platform: 'youtube', title: 'Equipment Review', artist: 'Gear Talk', dateUploaded: '15 Jun, 2025', score: 356, status: 'underperforming' },
+      { id: 'yt-10', rank: 10, thumbnail: 'https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=200&h=108&fit=crop', platform: 'youtube', title: 'Old Archive Footage', artist: 'Throwback', dateUploaded: '10 Jun, 2025', score: 287, status: 'underperforming' },
+    ],
+  },
+  tiktok: {
+    topItems: [
+      { id: 'tt-1', rank: 1, thumbnail: 'https://images.unsplash.com/photo-1571330735066-03aaa9429d89?w=200&h=108&fit=crop', platform: 'tiktok', title: 'A BUGS LIFE', artist: 'Sudan Archives', dateUploaded: '21 Jul, 2025', score: 848, status: 'exceptional' },
+      { id: 'tt-2', rank: 2, thumbnail: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=200&h=108&fit=crop', platform: 'tiktok', title: 'La Rumba del Perdón', artist: 'Rosalia', dateUploaded: '5 Nov, 2025', score: 813, status: 'exceptional' },
+      { id: 'tt-3', rank: 3, thumbnail: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=200&h=108&fit=crop', platform: 'tiktok', title: 'Nausicaä (Love Will Be Revealed)', artist: 'Cameron Winter', dateUploaded: '24 Jun, 2025', score: 731, status: 'strong' },
+    ],
+    worstItems: [
+      { id: 'tt-8', rank: 8, thumbnail: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200&h=108&fit=crop', platform: 'tiktok', title: 'viscus', artist: 'Oklu & FKA Twigs', dateUploaded: '18 Aug, 2025', score: 567, status: 'healthy' },
+      { id: 'tt-9', rank: 9, thumbnail: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=200&h=108&fit=crop', platform: 'tiktok', title: 'Automatic Love', artist: 'Nourished by Time', dateUploaded: '23 Aug, 2025', score: 287, status: 'underperforming' },
+      { id: 'tt-10', rank: 10, thumbnail: 'https://images.unsplash.com/photo-1508854710579-5cecc3a9ff17?w=200&h=108&fit=crop', platform: 'tiktok', title: 'Not Hell, Not Heaven', artist: 'Scowl', dateUploaded: '5 Feb, 2025', score: 181, status: 'underperforming' },
+    ],
+  },
+  instagram: {
+    topItems: [
+      { id: 'ig-1', rank: 1, thumbnail: 'https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?w=200&h=108&fit=crop', platform: 'instagram', title: 'Festival Vibes', artist: 'Summer Fest 2025', dateUploaded: '18 Jul, 2025', score: 876, status: 'exceptional' },
+      { id: 'ig-2', rank: 2, thumbnail: 'https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=200&h=108&fit=crop', platform: 'instagram', title: 'Studio Magic', artist: 'Recording Session', dateUploaded: '12 Jul, 2025', score: 834, status: 'exceptional' },
+      { id: 'ig-3', rank: 3, thumbnail: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=200&h=108&fit=crop', platform: 'instagram', title: 'Fan Meet & Greet', artist: 'Tour Memories', dateUploaded: '5 Jul, 2025', score: 789, status: 'strong' },
+    ],
+    worstItems: [
+      { id: 'ig-8', rank: 8, thumbnail: 'https://images.unsplash.com/photo-1493225255756-d9584f8606e9?w=200&h=108&fit=crop', platform: 'instagram', title: 'Merchandise Drop', artist: 'New Collection', dateUploaded: '25 Jun, 2025', score: 445, status: 'at-risk' },
+      { id: 'ig-9', rank: 9, thumbnail: 'https://images.unsplash.com/photo-1460723237483-7a6dc9d0b212?w=200&h=108&fit=crop', platform: 'instagram', title: 'Podcast Clip', artist: 'Interview Highlights', dateUploaded: '20 Jun, 2025', score: 378, status: 'underperforming' },
+      { id: 'ig-10', rank: 10, thumbnail: 'https://images.unsplash.com/photo-1485579149621-3123dd979885?w=200&h=108&fit=crop', platform: 'instagram', title: 'Throwback Photo', artist: 'Memory Lane', dateUploaded: '15 Jun, 2025', score: 298, status: 'underperforming' },
+    ],
+  },
+  facebook: {
+    topItems: [
+      { id: 'fb-1', rank: 1, thumbnail: 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=200&h=108&fit=crop', platform: 'facebook', title: 'Live Stream Event', artist: 'Virtual Concert', dateUploaded: '20 Jul, 2025', score: 723, status: 'strong' },
+      { id: 'fb-2', rank: 2, thumbnail: 'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=200&h=108&fit=crop', platform: 'facebook', title: 'Behind the Music', artist: 'Documentary', dateUploaded: '14 Jul, 2025', score: 678, status: 'healthy' },
+      { id: 'fb-3', rank: 3, thumbnail: 'https://images.unsplash.com/photo-1493676304819-0d7a8d026dcf?w=200&h=108&fit=crop', platform: 'facebook', title: 'Fan Appreciation', artist: 'Thank You Post', dateUploaded: '8 Jul, 2025', score: 634, status: 'healthy' },
+    ],
+    worstItems: [
+      { id: 'fb-8', rank: 8, thumbnail: 'https://images.unsplash.com/photo-1499364615650-ec38552f4f34?w=200&h=108&fit=crop', platform: 'facebook', title: 'News Update', artist: 'Announcement', dateUploaded: '28 Jun, 2025', score: 345, status: 'underperforming' },
+      { id: 'fb-9', rank: 9, thumbnail: 'https://images.unsplash.com/photo-1497911174120-042e5c0886e2?w=200&h=108&fit=crop', platform: 'facebook', title: 'Shared Article', artist: 'Press Coverage', dateUploaded: '22 Jun, 2025', score: 289, status: 'underperforming' },
+      { id: 'fb-10', rank: 10, thumbnail: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=200&h=108&fit=crop', platform: 'facebook', title: 'Text Post', artist: 'Quick Update', dateUploaded: '18 Jun, 2025', score: 198, status: 'underperforming' },
+    ],
+  },
+  x: {
+    topItems: [
+      { id: 'x-1', rank: 1, thumbnail: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=200&h=108&fit=crop', platform: 'x', title: 'Album Teaser', artist: 'New Release', dateUploaded: '22 Jul, 2025', score: 645, status: 'healthy' },
+      { id: 'x-2', rank: 2, thumbnail: 'https://images.unsplash.com/photo-1501612780327-45045538702b?w=200&h=108&fit=crop', platform: 'x', title: 'Industry Take', artist: 'Hot Take Thread', dateUploaded: '16 Jul, 2025', score: 598, status: 'healthy' },
+      { id: 'x-3', rank: 3, thumbnail: 'https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=200&h=108&fit=crop', platform: 'x', title: 'Collaboration Reveal', artist: 'Surprise Drop', dateUploaded: '10 Jul, 2025', score: 534, status: 'healthy' },
+    ],
+    worstItems: [
+      { id: 'x-8', rank: 8, thumbnail: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&h=108&fit=crop', platform: 'x', title: 'Repost', artist: 'Shared Content', dateUploaded: '1 Jul, 2025', score: 234, status: 'underperforming' },
+      { id: 'x-9', rank: 9, thumbnail: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=108&fit=crop', platform: 'x', title: 'Reply Thread', artist: 'Fan Interaction', dateUploaded: '25 Jun, 2025', score: 189, status: 'underperforming' },
+      { id: 'x-10', rank: 10, thumbnail: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=200&h=108&fit=crop', platform: 'x', title: 'Poll Results', artist: 'Community Vote', dateUploaded: '20 Jun, 2025', score: 156, status: 'underperforming' },
+    ],
+  },
+  linkedin: {
+    topItems: [
+      { id: 'li-1', rank: 1, thumbnail: 'https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?w=200&h=108&fit=crop', platform: 'linkedin', title: 'Industry Insights', artist: 'Music Business', dateUploaded: '19 Jul, 2025', score: 812, status: 'exceptional' },
+      { id: 'li-2', rank: 2, thumbnail: 'https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=200&h=108&fit=crop', platform: 'linkedin', title: 'Career Milestone', artist: 'Achievement Post', dateUploaded: '13 Jul, 2025', score: 756, status: 'strong' },
+      { id: 'li-3', rank: 3, thumbnail: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=200&h=108&fit=crop', platform: 'linkedin', title: 'Team Spotlight', artist: 'Behind the Scenes', dateUploaded: '7 Jul, 2025', score: 698, status: 'healthy' },
+    ],
+    worstItems: [
+      { id: 'li-8', rank: 8, thumbnail: 'https://images.unsplash.com/photo-1493225255756-d9584f8606e9?w=200&h=108&fit=crop', platform: 'linkedin', title: 'Job Posting', artist: 'Hiring Update', dateUploaded: '30 Jun, 2025', score: 345, status: 'underperforming' },
+      { id: 'li-9', rank: 9, thumbnail: 'https://images.unsplash.com/photo-1460723237483-7a6dc9d0b212?w=200&h=108&fit=crop', platform: 'linkedin', title: 'Shared Article', artist: 'Industry News', dateUploaded: '24 Jun, 2025', score: 267, status: 'underperforming' },
+      { id: 'li-10', rank: 10, thumbnail: 'https://images.unsplash.com/photo-1485579149621-3123dd979885?w=200&h=108&fit=crop', platform: 'linkedin', title: 'Generic Update', artist: 'Company News', dateUploaded: '18 Jun, 2025', score: 198, status: 'underperforming' },
+    ],
+  },
+  snapchat: {
+    topItems: [
+      { id: 'sc-1', rank: 1, thumbnail: 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=200&h=108&fit=crop', platform: 'snapchat', title: 'AR Lens Launch', artist: 'Interactive Filter', dateUploaded: '21 Jul, 2025', score: 534, status: 'healthy' },
+      { id: 'sc-2', rank: 2, thumbnail: 'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=200&h=108&fit=crop', platform: 'snapchat', title: 'Day in the Life', artist: 'Story Series', dateUploaded: '15 Jul, 2025', score: 478, status: 'at-risk' },
+      { id: 'sc-3', rank: 3, thumbnail: 'https://images.unsplash.com/photo-1493676304819-0d7a8d026dcf?w=200&h=108&fit=crop', platform: 'snapchat', title: 'Exclusive Preview', artist: 'Sneak Peek', dateUploaded: '9 Jul, 2025', score: 423, status: 'at-risk' },
+    ],
+    worstItems: [
+      { id: 'sc-8', rank: 8, thumbnail: 'https://images.unsplash.com/photo-1499364615650-ec38552f4f34?w=200&h=108&fit=crop', platform: 'snapchat', title: 'Random Story', artist: 'Daily Update', dateUploaded: '2 Jul, 2025', score: 198, status: 'underperforming' },
+      { id: 'sc-9', rank: 9, thumbnail: 'https://images.unsplash.com/photo-1497911174120-042e5c0886e2?w=200&h=108&fit=crop', platform: 'snapchat', title: 'Quick Snap', artist: 'Casual Post', dateUploaded: '26 Jun, 2025', score: 156, status: 'underperforming' },
+      { id: 'sc-10', rank: 10, thumbnail: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=200&h=108&fit=crop', platform: 'snapchat', title: 'Reposted Content', artist: 'Shared Snap', dateUploaded: '20 Jun, 2025', score: 112, status: 'underperforming' },
+    ],
+  },
+}
+
 export interface PlatformDetailPageProps {
   platform: PlatformConfig
 }
@@ -695,7 +1185,7 @@ export interface PlatformDetailPageProps {
  * - Platform-specific metrics and insights
  */
 export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
-  const { goBack } = useAppNavigation()
+  const { goBack, goToPlatformOutcome } = useAppNavigation()
   const platformIcon = PLATFORM_ICONS[platform.id]
   const scoreData = PLATFORM_SCORE_DATA[platform.id]
   const industryData = PLATFORM_INDUSTRY_DATA[platform.id]
@@ -704,6 +1194,34 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
   const genderData = PLATFORM_GENDER_DATA[platform.id]
   const ageData = PLATFORM_AGE_DATA[platform.id]
   const locationData = PLATFORM_LOCATION_DATA[platform.id]
+  const businessOutcomes = PLATFORM_BUSINESS_OUTCOMES[platform.id]
+  const otherOutcomes = PLATFORM_OTHER_OUTCOMES[platform.id]
+  const aiTips = PLATFORM_AI_TIPS[platform.id]
+  const contentData = PLATFORM_CONTENT_DATA[platform.id]
+
+  // Build other outcomes data for OtherBusinessOutcomesSection
+  const otherOutcomesData: BusinessOutcome[] = [
+    {
+      id: 'audience-satisfaction',
+      icon: Repeat,
+      title: 'Audience Satisfaction',
+      subtitle: 'Overall viewer sentiment and feedback',
+      score: otherOutcomes.audienceSatisfaction.score,
+      status: otherOutcomes.audienceSatisfaction.status,
+      growth: otherOutcomes.audienceSatisfaction.growth,
+      growthDirection: otherOutcomes.audienceSatisfaction.growthDirection,
+    },
+    {
+      id: 'audience-loyalty',
+      icon: CircleDollarSign,
+      title: 'Audience Loyalty',
+      subtitle: 'Repeat viewers and subscriber retention',
+      score: otherOutcomes.audienceLoyalty.score,
+      status: otherOutcomes.audienceLoyalty.status,
+      growth: otherOutcomes.audienceLoyalty.growth,
+      growthDirection: otherOutcomes.audienceLoyalty.growthDirection,
+    },
+  ]
 
   const handleSearch = (query: string) => {
     console.log('Search:', query)
@@ -827,6 +1345,91 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
           data={locationData.data}
           metricLabel={locationData.metricLabel}
           alerts={locationData.alerts}
+        />
+      </div>
+
+      {/* Selected Business Outcomes Section */}
+      <div className="mt-10">
+        <div className="mb-4">
+          <h2 className="text-lg font-bold text-foreground">Selected Business Outcomes</h2>
+          <p className="text-sm text-muted-foreground">
+            How {platform.name} is performing across your chosen areas
+          </p>
+        </div>
+        <div className="flex flex-col gap-6 lg:flex-row">
+          <MetricsCardReusable
+            icon={Radio}
+            title="Brand Awareness"
+            subtitle="Reach, visibility & impressions"
+            score={businessOutcomes.brandAwareness.score}
+            statusLabel={businessOutcomes.brandAwareness.statusLabel}
+            changeValue={businessOutcomes.brandAwareness.changeValue}
+            changeDirection={businessOutcomes.brandAwareness.changeDirection}
+            stats={[
+              { icon: Zap, label: 'Efficiency', value: businessOutcomes.brandAwareness.stats.efficiency.value, unit: businessOutcomes.brandAwareness.stats.efficiency.unit },
+              { icon: TrendingUp, label: 'Growth', value: businessOutcomes.brandAwareness.stats.growth.value },
+            ]}
+            onMoreDetail={() => goToPlatformOutcome(platform.id, 'brand-awareness')}
+            className="lg:flex-1"
+          />
+          <MetricsCardReusable
+            icon={Sparkles}
+            title="Engagement"
+            subtitle="Likes, comments & interactions"
+            score={businessOutcomes.engagement.score}
+            statusLabel={businessOutcomes.engagement.statusLabel}
+            changeValue={businessOutcomes.engagement.changeValue}
+            changeDirection={businessOutcomes.engagement.changeDirection}
+            stats={[
+              { icon: Zap, label: 'Efficiency', value: businessOutcomes.engagement.stats.efficiency.value, unit: businessOutcomes.engagement.stats.efficiency.unit },
+              { icon: TrendingUp, label: 'Growth', value: businessOutcomes.engagement.stats.growth.value },
+            ]}
+            onMoreDetail={() => goToPlatformOutcome(platform.id, 'engagement')}
+            className="lg:flex-1"
+          />
+          <MetricsCardReusable
+            icon={Target}
+            title="Targeting"
+            subtitle="Audience alignment"
+            score={businessOutcomes.targeting.score}
+            statusLabel={businessOutcomes.targeting.statusLabel}
+            changeValue={businessOutcomes.targeting.changeValue}
+            changeDirection={businessOutcomes.targeting.changeDirection}
+            stats={[
+              { icon: Zap, label: 'Efficiency', value: businessOutcomes.targeting.stats.efficiency.value, unit: businessOutcomes.targeting.stats.efficiency.unit },
+              { icon: TrendingUp, label: 'Growth', value: businessOutcomes.targeting.stats.growth.value },
+            ]}
+            onMoreDetail={() => goToPlatformOutcome(platform.id, 'targeting')}
+            className="lg:flex-1"
+          />
+        </div>
+      </div>
+
+      {/* Other Business Outcomes and AI Hot Tips Row */}
+      <div className="mt-6 flex flex-col gap-6 lg:flex-row">
+        <OtherBusinessOutcomesSection
+          title="Other Business Outcomes"
+          subtitle={`How ${platform.name} is performing in non-focus areas`}
+          outcomes={otherOutcomesData}
+          onMoreDetail={(outcomeId) => goToPlatformOutcome(platform.id, outcomeId as 'audience-satisfaction' | 'audience-loyalty')}
+          className="lg:w-2/3"
+        />
+        <AIHotTipsSection
+          tips={aiTips}
+          className="lg:w-1/3"
+        />
+      </div>
+
+      {/* Top and Worst Performing Content */}
+      <div className="mt-10">
+        <SectionHeader
+          title="Content Performance"
+          subtitle={`Your best and worst performing ${platform.name} Content`}
+          className="mb-4"
+        />
+        <ContentPerformanceSection
+          topItems={contentData.topItems}
+          worstItems={contentData.worstItems}
         />
       </div>
     </DashboardLayout>
