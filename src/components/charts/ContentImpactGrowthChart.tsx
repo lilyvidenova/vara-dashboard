@@ -137,7 +137,7 @@ export function ContentImpactGrowthChart({
 
   // Calculate chart margins based on Y-axis visibility
   const chartMargin = showYAxis
-    ? { top: 10, right: 10, left: -10, bottom: 0 }
+    ? { top: 10, right: 10, left: 5, bottom: 0 }
     : { top: 10, right: 10, left: 0, bottom: 0 }
 
   return (
@@ -189,7 +189,7 @@ export function ContentImpactGrowthChart({
       {showSeparator && <div className="h-px w-full bg-border" />}
 
       {/* Chart */}
-      <div className={showHeaderMetrics ? 'mt-24 md:mt-20' : ''}>
+      <div className={cn('w-full overflow-hidden', showHeaderMetrics ? 'mt-24 md:mt-20' : '')}>
         <ResponsiveContainer width="100%" height={showHeaderMetrics ? 240 : 200}>
           <AreaChart data={data} margin={chartMargin}>
             <defs>
@@ -214,7 +214,7 @@ export function ContentImpactGrowthChart({
               tickLine={false}
               tick={{ fill: '#52525b', fontSize: 10, fontWeight: 'bold' }}
               tickFormatter={yAxisFormatter}
-              width={35}
+              width={45}
             />
 
             <Tooltip
