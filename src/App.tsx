@@ -17,6 +17,14 @@ import {
   AudienceSatisfactionPage,
   AudienceLoyaltyPage,
 } from '@/pages/outcomes'
+import {
+  PlatformBrandAwarenessPage,
+  PlatformEngagementPage,
+  PlatformTargetingPage,
+  PlatformAudienceSatisfactionPage,
+  PlatformAudienceLoyaltyPage,
+} from '@/pages/platforms/outcomes'
+import { GaugePreview } from '@/pages/GaugePreview'
 import { ROUTES } from '@/routes/routes'
 
 function App() {
@@ -47,6 +55,16 @@ function App() {
         <Route path={ROUTES.OUTCOMES.TARGETING} element={<TargetingPage />} />
         <Route path={ROUTES.OUTCOMES.AUDIENCE_SATISFACTION} element={<AudienceSatisfactionPage />} />
         <Route path={ROUTES.OUTCOMES.AUDIENCE_LOYALTY} element={<AudienceLoyaltyPage />} />
+
+        {/* Platform-specific Outcome Pages */}
+        <Route path={ROUTES.PLATFORM_OUTCOMES.BRAND_AWARENESS} element={<PlatformBrandAwarenessPage />} />
+        <Route path={ROUTES.PLATFORM_OUTCOMES.ENGAGEMENT} element={<PlatformEngagementPage />} />
+        <Route path={ROUTES.PLATFORM_OUTCOMES.TARGETING} element={<PlatformTargetingPage />} />
+        <Route path={ROUTES.PLATFORM_OUTCOMES.AUDIENCE_SATISFACTION} element={<PlatformAudienceSatisfactionPage />} />
+        <Route path={ROUTES.PLATFORM_OUTCOMES.AUDIENCE_LOYALTY} element={<PlatformAudienceLoyaltyPage />} />
+
+        {/* Dev/Debug Pages */}
+        <Route path="/dev/gauges" element={<GaugePreview />} />
 
         {/* Catch-all redirect to dashboard */}
         <Route path="*" element={<Navigate to={ROUTES.DASHBOARD} replace />} />

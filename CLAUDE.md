@@ -34,7 +34,7 @@ vara-dashboard/
 │   │   │   ├── BaseCard.tsx       # Base card wrapper
 │   │   │   ├── StatusBadge.tsx    # Pill badge component
 │   │   │   ├── ChangeIndicator.tsx # Up/down percentage
-│   │   │   ├── GaugeVisualization.tsx # SVG gauge arc
+│   │   │   ├── OutcomeGauge.tsx   # SVG gauge arc (small & large)
 │   │   │   ├── MetricItem.tsx     # Icon + label + value
 │   │   │   ├── MoreDetailButton.tsx # Action button
 │   │   │   ├── MetricsCard.tsx    # Main composite card
@@ -189,21 +189,26 @@ import { MetricsCard } from '@/components/cards'
 />
 ```
 
-**GaugeVisualization** - SVG semicircle gauge with three segments:
+**OutcomeGauge** - SVG semicircle gauge with two size variants:
 ```tsx
-import { GaugeVisualization } from '@/components/cards'
+import { OutcomeGauge, getStatusFromScore } from '@/components/cards'
 
-<GaugeVisualization
-  score={564}           // Current value
-  maxScore={1000}       // Maximum value (default: 1000)
-  status="healthy"      // Optional: 'underperforming' | 'healthy' | 'strong'
-/>
+// Default size (268×142) - tri-color scheme
+<OutcomeGauge status="healthy" />
+
+// Small size (142×76) - brand blue color
+<OutcomeGauge status="healthy" size="small" />
+
+// Using helper to convert score to status
+<OutcomeGauge status={getStatusFromScore(564)} size="small" />
 ```
 
-Score thresholds for auto-calculated status:
+Status options: `'underperforming' | 'at-risk' | 'healthy' | 'strong' | 'exceptional'`
+
+Score thresholds for `getStatusFromScore()`:
 - `underperforming`: 0-333 (≤33%)
 - `healthy`: 334-750 (34-75%)
-- `strong`: 751-1000 (>75%)
+- `strong`: 751+ (>75%)
 
 **BaseCard** - Base card wrapper with variants:
 ```tsx
@@ -450,6 +455,48 @@ export function NewPage() {
 2. Follow existing patterns for props and styling
 3. Export from index file if in a subdirectory
 4. Include responsive considerations (mobile-first)
+
+## Component Reuse Guidelines (CRITICAL)
+
+**BEFORE creating any new component, you MUST:**
+
+1. **Search the existing codebase** for similar components that might already exist:
+   - Search `src/components/cards/` for card-type components
+   - Search `src/components/sections/` for section-type components
+   - Check the barrel exports in `index.ts` files
+
+2. **Check how similar features are implemented on other pages**:
+   - Look at `Dashboard.tsx` - this is the reference implementation
+   - Check `OutcomeDetailPage.tsx` for outcome/business metric patterns
+   - Ensure visual consistency across pages by using the same components
+
+3. **Key reusable components to use instead of creating new ones**:
+
+   | Use Case | Component to Use | Location |
+   |----------|------------------|----------|
+   | Business outcome cards (Brand Awareness, Engagement, etc.) | `MetricsCardReusable` | `@/components/cards` |
+   | Other business outcomes table | `OtherBusinessOutcomesSection` | `@/components/sections` |
+   | AI tips display | `AIHotTipsSection` | `@/components/sections` |
+   | Platform performance list | `PlatformPerformanceSection` | `@/components/sections` |
+   | Financial overview | `FinancialOverviewSection` | `@/components/sections` |
+   | Score display with gauge | `ScoreCard` | `@/components/cards` |
+   | Small gauge (brand blue) | `OutcomeGauge` with `size="small"` | `@/components/cards` |
+   | Large gauge (tri-color) | `OutcomeGauge` (default) | `@/components/cards` |
+
+4. **If you need to add features to an existing page that already exists on another page**:
+   - Find how it's done on the reference page (usually Dashboard)
+   - Use the SAME components with the SAME props pattern
+   - Only create a new component if the visual design is fundamentally different
+
+5. **Warning signs you might be duplicating a component**:
+   - You're about to create a component with a similar name to an existing one
+   - The new component serves the same purpose as an existing one
+   - The Figma design looks similar to something already implemented elsewhere
+
+**This prevents:**
+- Visual inconsistency between pages
+- Code duplication
+- Maintenance burden of multiple similar components
 
 ## Path Aliases
 

@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils'
 import { BaseCard } from './BaseCard'
 import { StatusBadge, type StatusBadgeProps } from './StatusBadge'
 import { ChangeIndicator } from './ChangeIndicator'
-import { GaugeVisualization, type GaugeStatus } from './GaugeVisualization'
+import { OutcomeGauge, getStatusFromScore, type OutcomeStatus } from './OutcomeGauge'
 import { MetricItem } from './MetricItem'
 import { MoreDetailButton } from './MoreDetailButton'
 
@@ -12,8 +12,7 @@ export interface MetricsCardProps {
   title: string
   subtitle?: string
   score: number
-  maxScore?: number
-  scoreStatus?: GaugeStatus
+  scoreStatus?: OutcomeStatus
   badgeText: string
   badgeVariant?: StatusBadgeProps['variant']
   changeDirection: 'up' | 'down'
@@ -30,14 +29,16 @@ export interface MetricsCardProps {
   className?: string
 }
 
-// Map gauge status to badge variant
-function getBadgeVariant(status: GaugeStatus): StatusBadgeProps['variant'] {
+// Map outcome status to badge variant
+function getBadgeVariant(status: OutcomeStatus): StatusBadgeProps['variant'] {
   switch (status) {
     case 'underperforming':
+    case 'at-risk':
       return 'error'
     case 'healthy':
       return 'warning'
     case 'strong':
+    case 'exceptional':
       return 'success'
     default:
       return 'default'
@@ -49,7 +50,6 @@ export function MetricsCard({
   title,
   subtitle,
   score,
-  maxScore = 1000,
   scoreStatus,
   badgeText,
   badgeVariant,
@@ -61,10 +61,7 @@ export function MetricsCard({
   className,
 }: MetricsCardProps) {
   // Calculate status from score if not provided
-  const computedStatus = scoreStatus || (
-    score <= 333 ? 'underperforming' :
-    score <= 750 ? 'healthy' : 'strong'
-  )
+  const computedStatus = scoreStatus || getStatusFromScore(score)
 
   const computedBadgeVariant = badgeVariant || getBadgeVariant(computedStatus)
 
@@ -90,14 +87,14 @@ export function MetricsCard({
 
         {/* Gauge and Score */}
         <div className="flex flex-col items-center gap-3">
-          <GaugeVisualization
-            score={score}
-            maxScore={maxScore}
-            status={computedStatus}
-          />
-          <p className="text-3xl font-bold text-card-foreground md:text-4xl">
-            {score}
-          </p>
+          <div className="relative flex items-center justify-center">
+            <OutcomeGauge status={computedStatus} size="small" />
+            <div className="absolute bottom-0 flex flex-col items-center">
+              <span className="text-3xl font-bold text-card-foreground md:text-4xl">
+                {score}
+              </span>
+            </div>
+          </div>
           <StatusBadge label={badgeText} variant={computedBadgeVariant} />
           <ChangeIndicator
             value={changeValue}

@@ -4,7 +4,7 @@ import type { LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { BaseCard } from './BaseCard'
 import { StatusBadge } from './StatusBadge'
-import { SmallGauge } from './SmallGauge'
+import { OutcomeGauge, getStatusFromScore } from './OutcomeGauge'
 
 export interface PlatformMetric {
   icon: LucideIcon
@@ -89,7 +89,7 @@ export function PlatformScoreCard({
         <div className="mt-4 flex w-full flex-col items-center gap-2.5">
           {/* Gauge with Score */}
           <div className="relative flex flex-col items-center">
-            <SmallGauge />
+            <OutcomeGauge status={getStatusFromScore(score)} size="small" />
             <div className="absolute bottom-0 flex flex-col items-center">
               <span className="text-[26px] font-bold leading-7 text-foreground">
                 {score}

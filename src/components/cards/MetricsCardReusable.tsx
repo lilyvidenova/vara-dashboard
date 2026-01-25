@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils'
 import { BaseCard } from './BaseCard'
 import { StatusBadge } from './StatusBadge'
 import { ChangeIndicator } from './ChangeIndicator'
-import { SmallGauge } from './SmallGauge'
+import { OutcomeGauge, getStatusFromScore } from './OutcomeGauge'
 import { MetricStat } from './MetricStat'
 import { OutlineButton } from './OutlineButton'
 import type { LucideIcon } from 'lucide-react'
@@ -65,7 +65,7 @@ export function MetricsCardReusable({
       <div className="flex flex-col items-center gap-2">
         {/* Gauge with Score overlay */}
         <div className="relative flex items-center justify-center">
-          <SmallGauge />
+          <OutcomeGauge status={getStatusFromScore(score)} size="small" />
           {/* Score positioned over gauge */}
           <div className="absolute bottom-0 flex flex-col items-center">
             <span className="text-4xl font-bold text-black">{score}</span>
