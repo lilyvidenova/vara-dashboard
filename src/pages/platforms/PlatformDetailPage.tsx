@@ -1326,14 +1326,14 @@ export function PlatformDetailPage({ platform }: PlatformDetailPageProps) {
           title={genderData.title}
           subtitle={genderData.subtitle}
           data={genderData.data}
-          className="lg:w-auto lg:min-w-[300px]"
+          className="lg:flex-1"
         />
         <AgeGroupBreakdownCard
           variant="percentage"
           title={ageData.title}
           subtitle={ageData.subtitle}
           data={ageData.data}
-          className="lg:w-auto lg:min-w-[380px]"
+          className="lg:flex-1"
         />
       </div>
 
