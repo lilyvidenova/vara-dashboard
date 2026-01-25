@@ -20,6 +20,7 @@ import {
   OtherBusinessOutcomesSection,
   AIHotTipsSection,
   TopPerformingContentSection,
+  SectionHeader,
 } from '@/components/sections'
 import type { PlatformData, BusinessOutcome, AITip, ContentItem } from '@/components/sections'
 import { ContentImpactGrowthChart, ContentImpactEfficiencyChart } from '@/components/charts'
@@ -363,9 +364,15 @@ export function Dashboard() {
         />
       </div>
 
-      {/* Metrics Cards (Reusable) */}
-      <div className="mt-8 flex flex-col gap-6 lg:flex-row">
-        <MetricsCardReusable
+      {/* Selected Business Outcomes */}
+      <div className="mt-10">
+        <SectionHeader
+          title="Selected Business Outcomes"
+          subtitle="How your content is performing across key business metrics"
+          className="mb-4"
+        />
+        <div className="flex flex-col gap-6 lg:flex-row">
+          <MetricsCardReusable
           icon={Radio}
           title="Brand Awareness"
           subtitle="Reach, visibility & impressions"
@@ -410,6 +417,7 @@ export function Dashboard() {
           onMoreDetail={() => goToOutcome('targeting')}
           className="lg:flex-1"
         />
+        </div>
       </div>
 
       {/* Other Business Outcomes & AI Hot Tips */}
@@ -423,18 +431,25 @@ export function Dashboard() {
       </div>
 
       {/* Top & Worst Performing Content Sections */}
-      <div className="mt-8 flex flex-col gap-6 lg:flex-row">
-        <TopPerformingContentSection
-          items={TOP_CONTENT_DATA}
-          onTitleClick={() => console.log('Navigate to full content list')}
-          className="lg:flex-1"
+      <div className="mt-10">
+        <SectionHeader
+          title="Content Performance"
+          subtitle="Your best and worst performing content"
+          className="mb-4"
         />
-        <TopPerformingContentSection
-          variant="worst"
-          items={WORST_CONTENT_DATA}
-          onTitleClick={() => console.log('Navigate to worst content list')}
-          className="lg:flex-1"
-        />
+        <div className="flex flex-col gap-6 lg:flex-row">
+          <TopPerformingContentSection
+            items={TOP_CONTENT_DATA}
+            onTitleClick={() => console.log('Navigate to full content list')}
+            className="lg:flex-1"
+          />
+          <TopPerformingContentSection
+            variant="worst"
+            items={WORST_CONTENT_DATA}
+            onTitleClick={() => console.log('Navigate to worst content list')}
+            className="lg:flex-1"
+          />
+        </div>
       </div>
     </DashboardLayout>
   )

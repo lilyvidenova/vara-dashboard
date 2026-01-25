@@ -42,3 +42,10 @@ export {
   type ContentStatus,
   type ContentSectionVariant,
 } from './TopPerformingContentSection'
+
+export {
+  ContentPerformanceSection,
+  type ContentPerformanceSectionProps,
+} from './ContentPerformanceSection'
+
+export { SectionHeader, type SectionHeaderProps } from './SectionHeader'

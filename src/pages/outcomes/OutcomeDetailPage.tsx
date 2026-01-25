@@ -38,6 +38,7 @@ import {
   type PlatformMetric,
   type MetricIndicator,
 } from '@/components/cards'
+import { SectionHeader } from '@/components/sections'
 import {
   ContentImpactGrowthChart,
   type ChartDataPoint,
@@ -876,10 +877,12 @@ export function OutcomeDetailPage({ outcome }: OutcomeDetailPageProps) {
       </div>
 
       {/* Platform Score Cards */}
-      <div className="mt-6">
-        <h3 className="mb-4 text-lg font-bold text-foreground">
-          {outcome.name} Score by Platform
-        </h3>
+      <div className="mt-10">
+        <SectionHeader
+          title={`${outcome.name} Score by Platform`}
+          subtitle={`How each platform contributes to your ${outcome.name} performance`}
+          className="mb-4"
+        />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {createPlatformData(outcome.id).map((platform) => (
             <PlatformScoreCard
