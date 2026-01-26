@@ -8,10 +8,12 @@ export type TipRiskLevel = 'high' | 'low'
 
 export interface AITip {
   riskLevel: TipRiskLevel
-  icon: LucideIcon
   title: string
-  description: string
-  insight: string
+  bulletPoints: string[]
+  // Legacy fields for backwards compatibility
+  icon?: LucideIcon
+  description?: string
+  insight?: string
 }
 
 export interface AIHotTipsCardProps {
@@ -29,7 +31,7 @@ function RiskBadge({ level }: RiskBadgeProps) {
   return (
     <div
       className={cn(
-        'rounded-full border px-2.5 pb-0.5 text-xs font-bold',
+        'rounded-full border px-2.5 py-0.5 text-xs font-bold',
         isHigh
           ? 'border-red-400 bg-card text-red-600'
           : 'border-primary bg-muted text-primary'
@@ -40,30 +42,37 @@ function RiskBadge({ level }: RiskBadgeProps) {
   )
 }
 
-interface TipSectionProps {
+interface TipCardProps {
   tip: AITip
 }
 
-function TipSection({ tip }: TipSectionProps) {
-  const Icon = tip.icon
+function TipCard({ tip }: TipCardProps) {
+  // Support both new bulletPoints format and legacy description/insight format
+  const bulletPoints = tip.bulletPoints?.length
+    ? tip.bulletPoints
+    : [tip.description, tip.insight].filter(Boolean) as string[]
 
   return (
-    <div className="flex flex-col items-center gap-3 rounded-md border border-border bg-muted/50 p-3">
-      <RiskBadge level={tip.riskLevel} />
-
-      <div className="flex flex-col items-center gap-3.5 w-full">
-        {/* Title with icon */}
-        <div className="flex items-center gap-1.5">
-          <Icon className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm font-bold text-foreground">{tip.title}</span>
-        </div>
-
-        {/* Description and insight */}
-        <div className="flex flex-col items-center gap-2.5 text-center">
-          <p className="text-sm text-muted-foreground">{tip.description}</p>
-          <p className="text-sm text-foreground">{tip.insight}</p>
-        </div>
+    <div className="flex flex-1 flex-col gap-3 rounded-md border border-border bg-muted/50 p-4">
+      {/* Risk Badge */}
+      <div className="flex justify-center">
+        <RiskBadge level={tip.riskLevel} />
       </div>
+
+      {/* Title */}
+      <h4 className="text-center text-sm font-bold text-foreground">
+        {tip.title}
+      </h4>
+
+      {/* Bullet Points */}
+      <ul className="flex flex-col gap-2">
+        {bulletPoints.map((point, index) => (
+          <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
+            <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
+            <span>{point}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
@@ -81,29 +90,39 @@ export function AIHotTipsCard({ tips, className }: AIHotTipsCardProps) {
         <span className="text-base font-bold text-foreground">AI Hot Tips</span>
       </div>
 
-      {/* Tips */}
-      <div className="flex flex-col gap-5">
+      {/* Tips - horizontal on desktop, stacked on mobile */}
+      <div className="flex flex-col gap-4 md:flex-row">
         {tips.map((tip, index) => (
-          <TipSection key={index} tip={tip} />
+          <TipCard key={index} tip={tip} />
         ))}
       </div>
     </BaseCard>
   )
 }
 
-// Default tips data
+// Default tips data (updated format with bullet points)
 export const DEFAULT_AI_TIPS: AITip[] = [
   {
     riskLevel: 'high',
-    icon: Gauge,
     title: 'Experiment with Faster Pacing',
+    bulletPoints: [
+      'Your average words-per-minute is lower than top performers',
+      'Slightly faster delivery can improve retention.',
+    ],
+    // Legacy fields for backwards compatibility
+    icon: Gauge,
     description: 'Your average words-per-minute is lower than top performers',
     insight: 'Slightly faster delivery can improve retention.',
   },
   {
     riskLevel: 'low',
-    icon: BookOpen,
     title: 'Add Chapters to your videos',
+    bulletPoints: [
+      'Videos over 8 minutes perform better with chapters',
+      'Break your content into sections to improve user experience',
+    ],
+    // Legacy fields for backwards compatibility
+    icon: BookOpen,
     description: 'Videos over 8 minutes perform better with chapters',
     insight: 'Break your content into sections to improve user experience',
   },
