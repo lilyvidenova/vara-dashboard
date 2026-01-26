@@ -1,0 +1,5 @@
+export { PlatformBrandAwarenessPage } from './BrandAwarenessPage'
+export { PlatformEngagementPage } from './EngagementPage'
+export { PlatformTargetingPage } from './TargetingPage'
+export { PlatformAudienceSatisfactionPage } from './AudienceSatisfactionPage'
+export { PlatformAudienceLoyaltyPage } from './AudienceLoyaltyPage'
