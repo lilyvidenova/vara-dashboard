@@ -22,10 +22,15 @@ export function ChartTooltip({ title, items, className }: ChartTooltipProps) {
     <div
       className={cn(
         'flex flex-col gap-2 rounded-md p-2.5',
-        'bg-[rgba(185,228,254,0.25)] backdrop-blur-[61px]',
+        'border border-[#e0f1fe]',
         'shadow-[0px_4px_6px_-2px_rgba(0,0,0,0.05),0px_10px_15px_-3px_rgba(0,0,0,0.1)]',
         className
       )}
+      style={{
+        background: 'rgba(185, 228, 254, 0.1)',
+        backdropFilter: 'blur(30px)',
+        WebkitBackdropFilter: 'blur(30px)',
+      }}
     >
       {/* Title */}
       <p className="text-sm font-bold leading-none text-foreground">{title}</p>

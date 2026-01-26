@@ -99,10 +99,14 @@ function SimpleTooltip({
     <div
       className={cn(
         'rounded-md px-3 py-1.5',
-        'bg-[rgba(185,228,254,0.25)] backdrop-blur-[30px]',
         'border border-[#e0f1fe]',
         'shadow-sm'
       )}
+      style={{
+        background: 'rgba(185, 228, 254, 0.1)',
+        backdropFilter: 'blur(30px)',
+        WebkitBackdropFilter: 'blur(30px)',
+      }}
     >
       <p className="text-sm text-muted-foreground">
         <span>{date} </span>
