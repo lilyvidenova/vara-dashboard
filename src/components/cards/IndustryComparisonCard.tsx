@@ -88,7 +88,7 @@ export function IndustryComparisonCard({
             </div>
 
             {/* Tooltip container - matches bar width */}
-            <div className="relative flex-1 h-0">
+            <div className="relative flex-1 min-h-[60px]">
               <div
                 className="absolute bottom-0 -translate-x-1/2"
                 style={{ left: `${userScorePercent}%` }}
@@ -138,7 +138,7 @@ export function IndustryComparisonCard({
             </div>
 
             {/* Tooltip container - matches bar width */}
-            <div className="relative flex-1 h-0">
+            <div className="relative flex-1 min-h-[60px]">
               <div
                 className="absolute top-0 -translate-x-1/2"
                 style={{ left: `${industryLeaderPercent}%` }}
