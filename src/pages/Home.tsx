@@ -13,11 +13,10 @@ export function Home() {
 
         {/* Welcome message */}
         <h1 className="mb-4 text-3xl font-semibold tracking-tight md:text-4xl">
-          Welcome to VARA
+          Welcome to VARA METRICS
         </h1>
         <p className="mb-8 max-w-md text-lg text-muted-foreground">
-          Your social media analytics dashboard for measuring what matters.
-          Track performance, understand your audience, and grow your impact.
+          Make faster, more confident decisions about content investment.
         </p>
 
         {/* CTAs */}
