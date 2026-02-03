@@ -1,10 +1,13 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Search } from 'lucide-react'
+
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { MobileSearchModal } from './MobileSearchModal'
 import { useIsMobile } from '@/hooks/useMediaQuery'
+import { ROUTES } from '@/routes/routes'
 
 interface HeaderProps {
   currentPage: string
@@ -48,9 +51,12 @@ export function Header({
         <div className="flex h-14 items-center justify-between px-4 md:h-16 md:px-6">
           {/* Left side - Logo and page title */}
           <div className="flex items-center gap-4 md:gap-6">
-            <span className="text-base font-bold text-primary">
+            <Link
+              to={ROUTES.HOME}
+              className="text-base font-bold text-primary hover:text-primary/80 transition-colors"
+            >
               VARA METRICS
-            </span>
+            </Link>
 
             {/* Divider and page title - hidden on mobile */}
             <div className="hidden items-center gap-4 lg:flex">
