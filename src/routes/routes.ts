@@ -1,6 +1,7 @@
 export const ROUTES = {
+  HOME: '/',
   ONBOARDING: '/onboarding',
-  DASHBOARD: '/',
+  DASHBOARD: '/dashboard',
   FINANCIAL: '/financial',
   PLATFORMS: {
     ROOT: '/platforms',
