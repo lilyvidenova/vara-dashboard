@@ -12,7 +12,7 @@ export const PLATFORMS = [
 export const BUSINESS_TYPES = [
   { id: 'product-or-service', label: 'Product or Service' },
   { id: 'content-creator', label: 'Content Creator' },
-  { id: 'other', label: 'Other' },
+  { id: 'both', label: 'Both' },
 ] as const
 
 export const GOALS = [

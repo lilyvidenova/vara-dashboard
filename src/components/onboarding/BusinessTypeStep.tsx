@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Package, Video, MoreHorizontal } from 'lucide-react'
+import { Package, Video, Layers } from 'lucide-react'
 
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
@@ -9,13 +9,13 @@ import { BUSINESS_TYPES } from '@/types/onboarding'
 const businessTypeIcons: Record<string, React.ReactNode> = {
   'product-or-service': <Package className="h-8 w-8" />,
   'content-creator': <Video className="h-8 w-8" />,
-  other: <MoreHorizontal className="h-8 w-8" />,
+  both: <Layers className="h-8 w-8" />,
 }
 
 const businessTypeDescriptions: Record<string, string> = {
   'product-or-service': 'You sell products or services to customers',
   'content-creator': 'You create content and build an audience',
-  other: 'Something else entirely',
+  both: 'You sell products/services and create content',
 }
 
 interface BusinessTypeStepProps {
